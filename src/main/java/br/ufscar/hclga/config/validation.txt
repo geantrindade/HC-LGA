@@ -1,0 +1,24 @@
+saveInDirectory = C:\\Users\\gean_\\Documents\\NetBeansProjects\\HC-LGA\\src\\main\\java\\br\\ufscar\\hclga\\
+
+numClasses = 14
+
+#sem uso
+numberOfTrainIntances = -1
+
+realTestClassesFile = C:\\Users\\gean_\\Documents\\NetBeansProjects\\HC-LGA\\Evaluation\\
+
+predictedClassesFile = C:\\Users\\gean_\\Documents\\NetBeansProjects\\HC-LGA\\Results\\SingleLabel\\Tree\\mips1testatt.arff\\Run1\\
+
+#sem uso
+rulesFile = ...
+
+threshold = 0.5
+
+#if equals to '0' then the validation process is applied to a specific fold, if 
+#equals to 1, is for all
+allFolds = 0
+
+specificFold = 1
+
+#validation acording to hierarchical measures or not
+hierarchical = true
