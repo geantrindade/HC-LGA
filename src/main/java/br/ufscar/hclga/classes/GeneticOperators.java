@@ -14,8 +14,8 @@ public class GeneticOperators {
 static boolean multiObj;
 
 /* ===========================================================
-     * Apply the elitism operator
-     * =========================================================== */
+* Apply the elitism operator
+* =========================================================== */
 public static ArrayList<Individual> elitism(Evolution e) {
     ArrayList<Individual> elite = new ArrayList<Individual>();
 
@@ -27,9 +27,9 @@ public static ArrayList<Individual> elitism(Evolution e) {
 }
 
 /* ===========================================================
-     * Apply the uniform crossover operator considering distance
-     * between the parents
-     * =========================================================== */
+* Apply the uniform crossover operator considering distance
+* between the parents
+* =========================================================== */
 public static ArrayList<Individual> uniformCrossoverDistance(Evolution e) {
     ArrayList<Individual> parents = new ArrayList<Individual>();
     ArrayList<Individual> children = new ArrayList<Individual>();
@@ -157,12 +157,13 @@ public static ArrayList<Individual> uniformCrossoverDistance(Evolution e) {
 
         }
     }
+
     return children;
 }
 
 /* ===========================================================
-     * Apply the uniform crossover operator
-     * =========================================================== */
+* Apply the uniform crossover operator
+* =========================================================== */
 public static ArrayList<Individual> uniformCrossoverRandom(Evolution e) {
     ArrayList<Individual> children = new ArrayList<Individual>();
     int numChildren = e.getCurrentPopulation().size() - Parameters.getElitismNumber();
@@ -274,15 +275,14 @@ public static ArrayList<Individual> uniformCrossoverRandom(Evolution e) {
                 children.add(child2);
             }
         }
-
     }
 
     return children;
 }
 
 /* ===========================================================
-     * Given a rule, returns the position of the active terms
-     * =========================================================== */
+* Given a rule, returns the position of the active terms
+* =========================================================== */
 public static ArrayList<Integer> getPosActiveTerms(double[] rule1, double[] rule2) {
     ArrayList<Integer> posActiveTerms = new ArrayList<Integer>();
 
@@ -312,11 +312,10 @@ public static ArrayList<Integer> getPosActiveTerms(double[] rule) {
 }
 
 /* ===========================================================
-     * Select one parent via tournament selection
-     * =========================================================== */
+* Select one parent via tournament selection
+* =========================================================== */
 private static Individual tournamentSelection1Parent(Evolution e) {
     int sizeTournament = Parameters.getSizeTournament();
-
     Random generator = new Random();
     ArrayList<Individual> candidates = new ArrayList<Individual>();
 
@@ -338,8 +337,8 @@ private static Individual tournamentSelection1Parent(Evolution e) {
 }
 
 /* ===========================================================
-     * Select two parents via tournament selection
-     * =========================================================== */
+* Select two parents via tournament selection
+* =========================================================== */
 private static ArrayList<Individual> tournamentSelection2Parents(Evolution e) {
     ArrayList<Individual> candidates = new ArrayList<Individual>();
     int sizeTournament = Parameters.getSizeTournament();
@@ -384,8 +383,8 @@ private static ArrayList<Individual> tournamentSelection2Parents(Evolution e) {
 }
 
 /* ===========================================================
-     * Get the second parent for crossover
-     * =========================================================== */
+* Get the second parent for crossover
+* =========================================================== */
 private static Individual getSecondParent(Individual parent1, ArrayList<Individual> parents) {
     Individual parent2;
     ArrayList<Distances> distances = new ArrayList<Distances>();
@@ -418,9 +417,9 @@ private static Individual getSecondParent(Individual parent1, ArrayList<Individu
 }
 
 /* ===========================================================
-     * Get the Euclidean distance between two mean class label
-     * vectors of two individuals
-     * =========================================================== */
+* Get the Euclidean distance between two mean class label
+* vectors of two individuals
+* =========================================================== */
 private static double getEuclideanDistance(Individual rule1, Individual rule2) {
     double distance = 0;
 
@@ -440,9 +439,9 @@ private static double getEuclideanDistance(Individual rule1, Individual rule2) {
 }
 
 /* ===========================================================
-     * Tries to search for a rule with good fitness and with a
-     * maximum coverage
-     * =========================================================== */
+* Tries to search for a rule with good fitness and with a
+* maximum coverage
+* =========================================================== */
 public static ArrayList<Individual> localSearchOperatorMaxFitness(ArrayList<Individual> individuals) {
     Random generator = new Random();
 
@@ -455,7 +454,6 @@ public static ArrayList<Individual> localSearchOperatorMaxFitness(ArrayList<Indi
 
         while ((individual.getFitness() >= previousFitness
                 && individual.getNumberCoveredExamples() < Parameters.getMaxCoveredExamplesRule()) || first == 0) {
-
             first++;
 
             //Save the rule before changing
@@ -497,10 +495,10 @@ public static ArrayList<Individual> localSearchOperatorMaxFitness(ArrayList<Indi
 }
 
 /* ===========================================================
-     * Try to garantee that a rule cover at least a minimum number of
-     * examples, and also garantees that a rule don't cover more
-     * than a maximum number of examples
-     * =========================================================== */
+* Try to garantee that a rule cover at least a minimum number of
+* examples, and also garantees that a rule don't cover more
+* than a maximum number of examples
+* =========================================================== */
 public static ArrayList<Individual> localSearchOperatorMinMax(ArrayList<Individual> individuals) {
     Random generator = new Random();
 
@@ -537,10 +535,12 @@ public static ArrayList<Individual> localSearchOperatorMinMax(ArrayList<Individu
                     int posAttribute = posTerm / 4;
                     if (Datasets.getInfoAttributes().get(posAttribute) == 1) {
                         generalizationNumeric(individual.getRule(), posTerm, 1);
+
                     } else {
                         int posCatAttribute = Datasets.getCategoricAttributes().indexOf(posAttribute);
                         generalizationCategorical(individual.getRule(), posTerm, posCatAttribute);
                     }
+
                 } else {
                     //Empty rule!!!!
                     //Add one term
@@ -590,8 +590,8 @@ public static ArrayList<Individual> localSearchOperatorMinMax(ArrayList<Individu
 }
 
 /* ===========================================================
-     * Eliminates terms while the fitness function does not decrease
-     * =========================================================== */
+* Eliminates terms while the fitness function does not decrease
+* =========================================================== */
 public static ArrayList<Individual> localSearchOperatorFitness(ArrayList<Individual> individuals) {
     Individual individual;
     double previousFitness;
@@ -628,8 +628,8 @@ public static ArrayList<Individual> localSearchOperatorFitness(ArrayList<Individ
 }
 
 /* ===========================================================
-     * Apply the mutation operator
-     * =========================================================== */
+* Apply the mutation operator
+* =========================================================== */
 public static ArrayList<Individual> mutation(ArrayList<Individual> children) {
     int numMutationIndividuals = (int) (Parameters.getMutationRate() * children.size());
     ArrayList<Integer> indexChildrenMutation = new ArrayList<Integer>();
@@ -667,6 +667,7 @@ public static ArrayList<Individual> mutation(ArrayList<Individual> children) {
 
             Individual individual = new Individual(rule, posActiveTerms, multiObj);
             children.set(indexIndividual, individual);
+
         } //No flag mutation?
         else {
             //Generalize or restrict the rules with 0.5 probability
@@ -691,6 +692,7 @@ public static ArrayList<Individual> mutation(ArrayList<Individual> children) {
                         restrictionNumeric(children.get(indexIndividual).getRule(), posTerm, 1);
                         break;
                     }
+
                 } else {
                     //Categoric attribute, so apply generalization or restriction
                     //depending on the values of the rule term
@@ -708,8 +710,8 @@ public static ArrayList<Individual> mutation(ArrayList<Individual> children) {
 }
 
 /* ===========================================================
-     * Generalization for categoric attribute
-     * =========================================================== */
+* Generalization for categoric attribute
+* =========================================================== */
 private static void generalizationCategorical(double[] rule, int posTerm, int posAttribute) {
     Random generator = new Random();
 
@@ -751,6 +753,7 @@ private static void generalizationCategorical(double[] rule, int posTerm, int po
             int newIndexValue = generator.nextInt(possibleSubstitutions.size());
             rule[posTerm + 2] = possibleSubstitutions.get(newIndexValue);
         }
+
     } else if (ruleOperator == 2) { //attributeValue in {values in infLim}
         //Will randomly substitute the set of values of the term by a 
         //larger set. 
@@ -780,12 +783,11 @@ private static void generalizationCategorical(double[] rule, int posTerm, int po
 }
 
 /* ===========================================================
-     * Generalization/Restriction mutation for categoric attribute
-     * =========================================================== */
+* Generalization/Restriction mutation for categoric attribute
+* =========================================================== */
 private static void generalizationRestrictionCategorical(double[] rule, int posTerm, int posAttribute, int probability) {
     //Get the operator of the term in the rule
     double ruleOperator = rule[posTerm + 1];
-
     Random generator = new Random();
     double prob = generator.nextDouble();
 
@@ -825,6 +827,7 @@ private static void generalizationRestrictionCategorical(double[] rule, int posT
                 int newIndexValue = generator.nextInt(possibleSubstitutions.size());
                 rule[posTerm + 2] = possibleSubstitutions.get(newIndexValue);
             }
+
         } else if (ruleOperator == 1) { //attributeValue != infLim
             //Term can be generalized or restricted depending on the attribute values
             //So we will randomly substitute the "!=" operator by "in" or "="
@@ -854,6 +857,7 @@ private static void generalizationRestrictionCategorical(double[] rule, int posT
                 int newIndexValue = generator.nextInt(possibleSubstitutions.size());
                 rule[posTerm + 2] = possibleSubstitutions.get(newIndexValue);
             }
+
         } else if (ruleOperator == 2) { //attributeValue in {values in infLim}
             //Will randomly substitute the set of values of the term by a smaller
             //or larger set. If the smaller set contains just one element, will substitute
@@ -887,18 +891,15 @@ private static void generalizationRestrictionCategorical(double[] rule, int posT
 }
 
 /* ===========================================================
-     * Generalization mutation for numeric attribute
-     * =========================================================== */
+* Generalization mutation for numeric attribute
+* =========================================================== */
 private static void generalizationNumeric(double[] rule, int posTerm, double probability) {
-
     //Get the operator of the term in the rule
     double ruleOperator = rule[posTerm + 1];
-
     Random generator = new Random();
     double prob = generator.nextDouble();
 
     if (prob <= probability) {
-
         double num = generator.nextDouble();
 
         if (ruleOperator == 0) { //Attribute <= supLim
@@ -947,8 +948,8 @@ private static void generalizationNumeric(double[] rule, int posTerm, double pro
 }
 
 /* ===========================================================
-     * Restriction mutation for numeric attribute
-     * =========================================================== */
+* Restriction mutation for numeric attribute
+* =========================================================== */
 private static void restrictionNumeric(double[] rule, int posTerm, double probability) {
     //Get the operator of the term in the rule
     double ruleOperator = rule[posTerm + 1];
@@ -964,8 +965,10 @@ private static void restrictionNumeric(double[] rule, int posTerm, double probab
 
             if (rule[posTerm + 3] == 0) {
                 rule[posTerm + 3] -= num;
+
             } else if (rule[posTerm + 3] > 0) {
                 rule[posTerm + 3] -= factor;
+
             } else {
                 rule[posTerm + 3] += factor;
             }
@@ -975,8 +978,10 @@ private static void restrictionNumeric(double[] rule, int posTerm, double probab
 
             if (rule[posTerm + 2] == 0) {
                 rule[posTerm + 2] += num;
+
             } else if (rule[posTerm + 2] > 0) {
                 rule[posTerm + 2] += factor;
+
             } else {
                 rule[posTerm + 2] -= factor;
             }
@@ -987,16 +992,20 @@ private static void restrictionNumeric(double[] rule, int posTerm, double probab
 
             if (rule[posTerm + 2] == 0) {
                 rule[posTerm + 2] += num;
+
             } else if (rule[posTerm + 2] > 0) {
                 rule[posTerm + 2] += factorInf;
+
             } else {
                 rule[posTerm + 2] -= factorInf;
             }
 
             if (rule[posTerm + 3] == 0) {
                 rule[posTerm + 3] -= num;
+
             } else if (rule[posTerm + 3] > 0) {
                 rule[posTerm + 3] -= factorSup;
+
             } else {
                 rule[posTerm + 3] += factorSup;
             }
@@ -1005,8 +1014,8 @@ private static void restrictionNumeric(double[] rule, int posTerm, double probab
 }
 
 /* ===========================================================
-     * Flag mutation
-     * =========================================================== */
+* Flag mutation
+* =========================================================== */
 public static int flagMutation(Individual individual, int pos, double probability, ArrayList<Integer> posActiveTerms) {
     Random generator = new Random();
     double num = generator.nextDouble();
@@ -1017,6 +1026,7 @@ public static int flagMutation(Individual individual, int pos, double probabilit
             individual.getRule()[pos] = 1.0;
             active = 1;
             posActiveTerms.add(pos);
+
         } else {
             individual.getRule()[pos] = 0.0;
         }
@@ -1053,8 +1063,8 @@ public static int flagMutation(double rule[], int pos, double probability, Array
 }
 
 /* ===========================================================
-     * Add one array list into another without repetions
-     * =========================================================== */
+* Add one array list into another without repetions
+* =========================================================== */
 public static ArrayList<Integer> addAllWithoutRepetitions(ArrayList<Integer> terms, ArrayList<Integer> termsToAdd) {
     for (int i = 0; i < termsToAdd.size(); i++) {
         if (terms.contains(termsToAdd.get(i)) == false) {
@@ -1081,13 +1091,15 @@ public Distances(double dist, int pos) {
 }
 
 /* ===========================================================
-     * Sorts the distances
-     * =========================================================== */
+* Sorts the distances
+* =========================================================== */
 public int compareTo(Object o) {
     if (this.getDistance() < ((Distances) o).getDistance()) {
         return -1;
+
     } else if (this.getDistance() > ((Distances) o).getDistance()) {
         return 1;
+
     } else {
         return 0;
     }
@@ -1100,4 +1112,5 @@ public double getDistance() {
 public int getPosition() {
     return position;
 }
+
 }

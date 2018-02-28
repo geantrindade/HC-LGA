@@ -108,7 +108,6 @@ public Population(boolean multiObj) {
             int emptyRule = 0;
 
             for (int j = 0; j < numberAttributes; j++) {
-
                 //Randomly set if the clausule will be used or not
                 individual[pos] = Operators.getInitialFlagValue(Parameters.getProbabilityUseClausule());
                 emptyRule += individual[pos];
@@ -120,7 +119,6 @@ public Population(boolean multiObj) {
                 }
 
                 if (infoAttributes.get(j) == 1) { //Numeric attribute
-
                     //Randomly select an numeric operator
                     individual[pos + 1] = Operators.getNumericOperator();
                     //Only generate relational rules
@@ -130,6 +128,7 @@ public Population(boolean multiObj) {
                     double attributeValue = 0.0;
                     if (Datasets.getTokenMissingValue().equals(example[j]) == true) {
                         attributeValue = Datasets.getMeanValues().get(0)[j];
+
                     } else {
                         attributeValue = Double.parseDouble(example[j]);
                     }
@@ -181,6 +180,7 @@ public Population(boolean multiObj) {
                     if (Datasets.getTokenMissingValue().equals(example[j]) == true) {
                         int posCatValue = (int) Datasets.getMeanValues().get(0)[j];
                         attributeValue = Datasets.getModeValues().get(0).get(posCatValue);
+
                     } else {
                         attributeValue = example[j];
                     }
@@ -201,14 +201,15 @@ public Population(boolean multiObj) {
                                 }
                             }
                         }
-                    } else if (individual[pos + 1] == 2) {// attribute in values
 
+                    } else if (individual[pos + 1] == 2) {// attribute in values
                         int found = 0;
                         //ArrayList<String[]> teste = Datasets.getCategoricMapping().get(posAttribute);
                         for (int k = 0; k < Datasets.getCategoricMapping().get(posAttribute).size(); k++) {
                             if (found == 1) {
                                 break;
                             }
+
                             if (Datasets.getCategoricMapping().get(posAttribute).get(k).length > 1) {
                                 for (int l = 0; l < Datasets.getCategoricMapping().get(posAttribute).get(k).length; l++) {
                                     //String[] teste = Datasets.getCategoricMapping().get(posAttribute).get(k);
@@ -238,12 +239,11 @@ public Population(boolean multiObj) {
 }
 
 /* ===========================================================
-     * Given the indexes of an example and an attribute, searches
-     * for another attribute that has a lower or equal value and
-     * returns its index
-     * =========================================================== */
+* Given the indexes of an example and an attribute, searches
+* for another attribute that has a lower or equal value and
+* returns its index
+* =========================================================== */
 public int getPosAttributeLowerValue(int posExample, int posAttribute, double attributeValue) {
-
     int pos = -1;
     int numberAttributes = Datasets.getInfoAttributes().size();
 
@@ -253,6 +253,7 @@ public int getPosAttributeLowerValue(int posExample, int posAttribute, double at
 
             if (Datasets.getTokenMissingValue().equals(getDatasetTrain().get(posExample)[i]) == true) {
                 searchValue = Datasets.getMeanValues().get(0)[i];
+
             } else {
                 searchValue = Double.parseDouble(getDatasetTrain().get(posExample)[i]);
             }
@@ -271,12 +272,11 @@ public int getPosAttributeLowerValue(int posExample, int posAttribute, double at
 }
 
 /* ===========================================================
-     * Given an categoric attribute value and the number of the
-     * attribute, returns the corresponding numeric value of this
-     * categoric value
-     * =========================================================== */
+* Given an categoric attribute value and the number of the
+* attribute, returns the corresponding numeric value of this
+* categoric value
+* =========================================================== */
 public static double getCategoricToNumericValue(int posAttribute, String attributeValue) {
-
     double numericValue = 0.0;
 
     for (int k = 0; k < Datasets.getCategoricMapping().get(posAttribute).size(); k++) {
@@ -292,43 +292,35 @@ public static double getCategoricToNumericValue(int posAttribute, String attribu
 }
 
 /* ===========================================================
-     * Get a value for clausules (x in {value1, value2, ..., valuen})
-     * =========================================================== */
+* Get a value for clausules (x in {value1, value2, ..., valuen})
+* =========================================================== */
 private double getSetOfCategoricValues(ArrayList<Integer> categoricValues) {
-
     double value = 0.0;
-
     Random generator = new Random();
     int pos = generator.nextInt(categoricValues.size());
     value = categoricValues.get(pos);
 
     return value;
-
 }
 
 /* ===========================================================
-     * Get a value for clausules (x = value) or (x != value)
-     * =========================================================== */
+* Get a value for clausules (x = value) or (x != value)
+* =========================================================== */
 private double getCategoricValue(ArrayList<Integer> categoricValues) {
-
     double value = 0.0;
-
     Random generator = new Random();
     int pos = generator.nextInt(categoricValues.size());
     value = categoricValues.get(pos);
 
     return value;
-
 }
 
 /* ===========================================================
-     * Get a value for clausules (x < value) or (x <= value)
-     * or (x < value) or (x <= value)
-     * =========================================================== */
+* Get a value for clausules (x < value) or (x <= value)
+* or (x < value) or (x <= value)
+* =========================================================== */
 private double getNumericValue(int numAttribute) {
-
     double value = 0.0;
-
     Random generator = new Random();
     int numInstance = generator.nextInt(getDatasetTrain().size());
     String stringValue = getDatasetTrain().get(numInstance)[numAttribute];
@@ -344,9 +336,9 @@ private double getNumericValue(int numAttribute) {
 }
 
 /* ===========================================================
-     * Get a value for clausules (value1 < x <= value2)
-     * or (value1 <= x < value2)
-     * =========================================================== */
+* Get a value for clausules (value1 < x <= value2)
+* or (value1 <= x < value2)
+* =========================================================== */
  /*private double[] getLowerHigherValue(int numAttribute) {
     
      double[] lowerHigherValue = {0.0, 0.0};
@@ -379,24 +371,19 @@ private double getNumericValue(int numAttribute) {
      return lowerHigherValue;
      }*/
 private double[] getLowerHigherValue(double exampleValue) {
-
     double[] lowerHigherValue = {0.0, 0.0};
 
     while (lowerHigherValue[0] > exampleValue || lowerHigherValue[1] < exampleValue) {
-
         Random generator = new Random();
 
         if (exampleValue != 0) {
-
             lowerHigherValue[0] = (4 * exampleValue) * generator.nextDouble() - exampleValue;
             lowerHigherValue[1] = (4 * exampleValue) * generator.nextDouble() - exampleValue;
-        } else {
 
+        } else {
             lowerHigherValue[0] = 2 * generator.nextDouble() - 1;
             lowerHigherValue[1] = 2 * generator.nextDouble() - 1;
-
         }
-
     }
 
     return lowerHigherValue;
@@ -444,32 +431,20 @@ public ArrayList<ArrayList<Integer>> getActiveTerms() {
     return activeTerms;
 }
 
-    /**
-     * @param population the population to set
-     */
-    public void setPopulation(ArrayList<double[]> population) {
-        this.population = population;
-    }
+public void setPopulation(ArrayList<double[]> population) {
+    this.population = population;
+}
 
-    /**
-     * @param activeTerms the activeTerms to set
-     */
-    public void setActiveTerms(ArrayList<ArrayList<Integer>> activeTerms) {
-        this.activeTerms = activeTerms;
-    }
+public void setActiveTerms(ArrayList<ArrayList<Integer>> activeTerms) {
+    this.activeTerms = activeTerms;
+}
 
-    /**
-     * @return the datasetTrain
-     */
-    public ArrayList<String[]> getDatasetTrain() {
-        return datasetTrain;
-    }
+public ArrayList<String[]> getDatasetTrain() {
+    return datasetTrain;
+}
 
-    /**
-     * @param datasetTrain the datasetTrain to set
-     */
-    public void setDatasetTrain(ArrayList<String[]> datasetTrain) {
-        this.datasetTrain = datasetTrain;
-    }
+public void setDatasetTrain(ArrayList<String[]> datasetTrain) {
+    this.datasetTrain = datasetTrain;
+}
 
 }

@@ -33,7 +33,6 @@ private String pathTestDataset = leConfig()[4];
 private String pathRules = leConfig()[5];
 private int numberOfRules;
 private String pathToSavePredictions = leConfig()[6];
-
 private ArrayList<String[]> datasetTrain;
 private ArrayList<String[]> datasetTest;
 private ArrayList<int[]> binaryClassesTrain;
@@ -64,8 +63,6 @@ public ClassificationWithRule() {
     } else {
         numberOfClasses = -1;
     }
-//
-//    setMeanClassLabelVectorAll();
 }
 
 public ArrayList<String> readRulesFile(String rulesFile) {
@@ -74,8 +71,8 @@ public ArrayList<String> readRulesFile(String rulesFile) {
     try {
         FileReader reader = new FileReader(rulesFile);
         BufferedReader buffReader = new BufferedReader(reader);
-
         String line = null;
+
         while ((line = buffReader.readLine()) != null) {
             if (!line.isEmpty()) {
                 result.add(line);
@@ -95,11 +92,12 @@ public ArrayList<String> readRulesFile(String rulesFile) {
 public ArrayList<String> readRulesFileClus(String rulesFile) {
     ArrayList<String> result = new ArrayList<>();
     String wholeRule = "";
+
     try {
         FileReader reader = new FileReader(rulesFile);
         BufferedReader buffReader = new BufferedReader(reader);
-
         String line = null;
+
         while ((line = buffReader.readLine()) != null) {
             if (!line.isEmpty()) {
                 wholeRule += line;
@@ -137,7 +135,6 @@ public ArrayList<String> readRulesFileClus(String rulesFile) {
 public void readTestData(String testDatasetFile) {
     datasetTest = new ArrayList<String[]>();
     int numAttribute = -1;
-
     Pattern patternData = Pattern.compile("@Data", Pattern.CASE_INSENSITIVE);
     Pattern patternNumeric = Pattern.compile("numeric", Pattern.CASE_INSENSITIVE);
     Pattern patternAttribute = Pattern.compile("@ATTRIBUTE", Pattern.CASE_INSENSITIVE);
@@ -178,8 +175,10 @@ public void readTestData(String testDatasetFile) {
                 datasetTest.add(vetLine);
             }
         }
+
         rTest.close();
         readerTest.close();
+
     } catch (IOException ioe) {
         ioe.printStackTrace();
     }
@@ -188,7 +187,6 @@ public void readTestData(String testDatasetFile) {
 public void readTrainData(String trainDatasetFile) {
     datasetTrain = new ArrayList<String[]>();
     int numAttribute = -1;
-
     Pattern patternData = Pattern.compile("@Data", Pattern.CASE_INSENSITIVE);
     Pattern patternNumeric = Pattern.compile("numeric", Pattern.CASE_INSENSITIVE);
     Pattern patternAttribute = Pattern.compile("@ATTRIBUTE", Pattern.CASE_INSENSITIVE);
@@ -201,7 +199,6 @@ public void readTrainData(String trainDatasetFile) {
         int dataFound = 0;
 
         while ((line = rTrain.readLine()) != null) {
-
             //Just read the file util do not find @DATA token
             if (dataFound == 0) {
                 Matcher mAttribute = patternAttribute.matcher(line);
@@ -210,7 +207,6 @@ public void readTrainData(String trainDatasetFile) {
                 //See if reached @DATA token
                 if (mData.find()) {
                     dataFound = 1;
-
                 } else if (mAttribute.find()) {
                     numAttribute++;
 
@@ -229,8 +225,10 @@ public void readTrainData(String trainDatasetFile) {
                 datasetTrain.add(vetLine);
             }
         }
+
         rTrain.close();
         readerTrain.close();
+
     } catch (IOException ioe) {
         ioe.printStackTrace();
     }
@@ -240,7 +238,6 @@ public ArrayList<Integer> getPosClasses(String actualClasses) {
     ArrayList<Integer> positions = new ArrayList<Integer>();
     String[] vectorClasses = actualClasses.split("@");
     ArrayList<String> allClasses = new ArrayList<String>();
-
     String[] vetClasses;
     String aClass = "";
 
@@ -277,7 +274,6 @@ public ArrayList<Integer> getPosClasses(String actualClasses) {
 public void buildClassesStructureTrain() {
     int numberClasses = this.numberOfClasses;
     binaryClassesTrain = new ArrayList<int[]>();
-
     int[] binaryVector = new int[numberClasses];
     String actualClasses;
     ArrayList<Integer> posClasses;
@@ -301,7 +297,6 @@ public void buildClassesStructureTrain() {
 public void buildClassesStructureTest() {
     int numberClasses = this.numberOfClasses;
     binaryClassesTest = new ArrayList<int[]>();
-
     int[] binaryVector = new int[numberClasses];
     String actualClasses;
     ArrayList<Integer> posClasses;
@@ -325,7 +320,6 @@ public void buildClassesStructureTest() {
 private void setTreeClassesWeights(double[] weightingScheme, String rootClass, ArrayList<Integer> superClassesPositionsAux) {
     rootClass = rootClass.concat("/[0-9]+");
     Pattern pattern = Pattern.compile(rootClass + "$");
-
     ArrayList<Integer> superClassesPositions = new ArrayList<Integer>();
     int numParents = 0;
     double sum = 0.0;
@@ -372,12 +366,9 @@ public void setTreeClasses(String lineClasses, String tokenHierarchical) {
     String[] vetLine = lineClasses.split(tokenHierarchical);
     classes = vetLine[1].split(",");
     classes[0] = classes[0].trim();
-
     weightingScheme = new double[classes.length];
     setWeightingScheme(weightingScheme);
-
     ArrayList<ArrayList<Integer>> positionClassesLevels = new ArrayList<ArrayList<Integer>>();
-
     String rootClass = "";
     ArrayList<Integer> positions = new ArrayList<Integer>();
     Pattern pattern;
@@ -437,7 +428,6 @@ public void setMeanClassLabelVectorAllTest(String testDatasetFile) {
 public ArrayList<String> getRuleAntecedents(String rule) {
     ArrayList<String> result = new ArrayList<>();
     int index;
-
     rule = rule.trim();
     index = rule.indexOf("=");
     rule = rule.substring(index + 1, rule.length());
@@ -446,7 +436,6 @@ public ArrayList<String> getRuleAntecedents(String rule) {
 
     if (!rule.contains("AND")) {
         result.add(rule);
-
     } else {
         while (!rule.isEmpty()) {
             index = rule.indexOf("AND");
@@ -479,7 +468,6 @@ public double[] getRuleConsequent(String rule) {
 public double[] getRuleConsequentClus(String rule) {
     rule = rule.replace("[", "");
     rule = rule.replace("]", "");
-
     int indexThen = rule.indexOf("THEN");
     String[] strSplit = rule.substring(indexThen + 5).split(",");
     double[] result = new double[strSplit.length];
@@ -540,7 +528,6 @@ public int searchForAttr(String attr) {
 
 public int classifyWithARule(String[] example, String rule) {
     ArrayList<String> antecedents = getRuleAntecedents(rule);
-//    ArrayList<String> antecedents = getRuleAntecedentsClus(rule);
     int coverage = 0;
     int index;
     Double infLim;
@@ -578,7 +565,6 @@ public int classifyWithARule(String[] example, String rule) {
             index = test.indexOf("<");
             supLim = Double.parseDouble(test.substring(index + 1, test.length()));
             coverage = less(attributeValue, supLim);
-
         }
 
         if (coverage == 0) {
@@ -650,7 +636,6 @@ public String[] leConfig() {
 //            FileReader reader = new FileReader("teste.txt");
             FileReader reader = new FileReader("C:\\Users\\gean_\\Dropbox\\posGrad\\GAs\\HC-LGA\\src\\main\\java\\br\\ufscar\\hclga\\config\\test.txt");
             BufferedReader buffReader = new BufferedReader(reader);
-
             Pattern pattern = Pattern.compile(regExp[i]);
             String line = null;
 
@@ -1173,9 +1158,7 @@ public void makePredictionsImproved(String pathRules, String fullPathToSavePredi
                 double temp = 0.0, betterValue = 0.0;
 
 //                System.out.println("number of rules: "+examplesAndRules.get(i).size());
-                
 //                System.out.println("trainExamplesSimilar size: " + trainExamplesSimilar.size());
-
                 for (int j = 0; j < examplesAndRules.get(i).size(); j++) {
                     String rule = examplesAndRules.get(i).get(j);
                     double[] consequent = getRuleConsequent(rule);
@@ -1200,11 +1183,9 @@ public void makePredictionsImproved(String pathRules, String fullPathToSavePredi
                     }
 
 //                    System.out.println("temp " + j + ": " + temp);
-
                     temp = temp / trainExamplesSimilar.size();
 
 //                    System.out.println("temp average " + j + ": " + temp);
-                    
                     if (temp > betterValue) {
                         betterValue = temp;
                         betterRuleIndex = j;
@@ -1925,7 +1906,7 @@ public static void main(String[] args) {
 //    c.run("makePredictions");
 //    c.run("makePredictionsImproved");
 //auxMinCov / generationReboots * 2
-int result = 20 / (1 * 2);
-        System.out.println("result: "+ result);
+    int result = 20 / (1 * 2);
+    System.out.println("result: " + result);
 }
 }

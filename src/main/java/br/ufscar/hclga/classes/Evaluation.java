@@ -13,10 +13,9 @@ private ArrayList<double[]> AUPRCClasses;
 private double[] fmeasureLevels;
 
 /*===========================================================================
-     * Evaluation method to calculate the AU(PRC) values
-     *===========================================================================*/
+* Evaluation method to calculate the AU(PRC) values
+*===========================================================================*/
 public void evaluationAUPRC(double[][] matrixPredictions) {
-
     //Store precision and recall values
     ArrayList<double[]> valuesPrecisionRecall = new ArrayList<double[]>();
     ArrayList<ArrayList<double[]>> valuesPrecisionRecallClasses = new ArrayList<ArrayList<double[]>>();
@@ -24,7 +23,6 @@ public void evaluationAUPRC(double[][] matrixPredictions) {
 
     //Iterate over all thresholds
     for (int indexThres = 0; indexThres < thresholdValues.size(); indexThres++) {
-
         //Matrix to store the outputs on the test data after applying thresholds
         int[][] binaryMatrix = new int[Classes.getBinaryClassesTest().size()][Classes.getBinaryClassesTest().get(0).length];
 
@@ -45,7 +43,6 @@ public void evaluationAUPRC(double[][] matrixPredictions) {
         //Save the predictions and results for each threshold
         //Results.savePredictionsThreshold(binaryMatrix, evalResults, evalResultsClasses, thresholdValues.get(indexThres));
     }
-
     //Calculate AU(PRC)
     AUPRC = calculateAUPRC(valuesPrecisionRecall);
 
@@ -54,10 +51,9 @@ public void evaluationAUPRC(double[][] matrixPredictions) {
 }
 
 /*===========================================================================
-     * Evaluation method to calculate the AU(PRC) values
-     *===========================================================================*/
+* Evaluation method to calculate the AU(PRC) values
+*===========================================================================*/
 public double evaluationAUPRCFitness(double[][] matrixPredictions, ArrayList<Integer> indexExamples) {
-
     //Store precision and recall values
     ArrayList<double[]> valuesPrecisionRecall = new ArrayList<double[]>();
     ArrayList<Double> thresholdValues = Parameters.getThresholdValues();
@@ -66,7 +62,6 @@ public double evaluationAUPRCFitness(double[][] matrixPredictions, ArrayList<Int
 
     //Iterate over all thresholds
     for (int indexThres = 0; indexThres < thresholdValues.size(); indexThres++) {
-
         //Matrix to store the outputs on the test data after applying thresholds
         int[][] binaryMatrix = new int[indexExamples.size()][Classes.getClasses().length];
 
@@ -74,7 +69,6 @@ public double evaluationAUPRCFitness(double[][] matrixPredictions, ArrayList<Int
         double threshold = thresholdValues.get(indexThres) / 100;
 
         //Apply the threshold
-//            applyThresholds(binaryMatrix, matrixPredictions, threshold, 1);
         applyThresholds(binaryMatrix, matrixPredictions, threshold, 0);
 
         ArrayList<int[]> trueClasses = new ArrayList<int[]>();
@@ -91,21 +85,18 @@ public double evaluationAUPRCFitness(double[][] matrixPredictions, ArrayList<Int
         valuesPrecisionRecall.add(evalResults);
 
     }
-
     //Calculate AU(PRC)
     AUPRCFitness = calculateAUPRCFitness(valuesPrecisionRecall);
 
     return AUPRCFitness;
-
 }
 
 /*===========================================================================
-     * Evaluation measure to calculated the Fmeasure per level (Single-Label)
-     * Will consider that if the value assign to a class is higher then 0, the
-     * class is predicted (1). Will not penalize over-specialized predictions
-     *===========================================================================*/
+* Evaluation measure to calculated the Fmeasure per level (Single-Label)
+* Will consider that if the value assign to a class is higher then 0, the
+* class is predicted (1). Will not penalize over-specialized predictions
+*===========================================================================*/
 public void evaluationFmeasure(double[][] matrixPredictions) {
-
     fmeasureLevels = new double[Parameters.getNumLevels()];
 
     //Matrix to store the outputs on the test data
@@ -119,34 +110,29 @@ public void evaluationFmeasure(double[][] matrixPredictions) {
     //Store the positions of the classes that will be used in the evaluation
     //ArrayList<Integer> positionsClassesToEvaluate = new ArrayList<Integer>();
     for (int i = 0; i < Parameters.getNumLevels(); i++) {
-
         //positionsClassesToEvaluate.addAll(positionClassesLevel.get(i));
         //F-measure per level
         double fmeasure = evaluationFmeasureLevel(Classes.getBinaryClassesTest(), binaryMatrix, positionClassesLevel.get(i));
-
         fmeasureLevels[i] = fmeasure;
     }
 }
 
 /*===========================================================================
-     * Calculate the F-measure for a level, given an array list with the 
-     * position of the classes for the level
-     * Will not penalize over-specialization
-     *===========================================================================*/
+* Calculate the F-measure for a level, given an array list with the 
+* position of the classes for the level
+* Will not penalize over-specialization
+*===========================================================================*/
 static double evaluationFmeasureLevel(ArrayList<int[]> trueClasses, int[][] predictedClasses, ArrayList<Integer> positionClassesLevel) {
-
     double fmeasure = 0;
     double sumIntersection = 0;
     double minSumPredicted = 0;
     double sumReal = 0;
 
     for (int numInst = 0; numInst < trueClasses.size(); numInst++) {
-
         double sumPredictedExample = 0;
         double sumRealExample = 0;
 
         for (int i = 0; i < positionClassesLevel.size(); i++) {
-
             int posClass = positionClassesLevel.get(i);
 
             if (predictedClasses[numInst][posClass] == 1 && trueClasses.get(numInst)[posClass] == 1) {
@@ -166,20 +152,22 @@ static double evaluationFmeasureLevel(ArrayList<int[]> trueClasses, int[][] pred
         //Get the minimum value. This will not penalize over-specialization
         if (sumPredictedExample < sumRealExample) {
             minSumPredicted += sumPredictedExample;
+
         } else {
             minSumPredicted += sumRealExample;
         }
-
     }
 
     //Hierarchical Precision
     double hPrecision = 0.0;
+
     if (minSumPredicted != 0) {
         hPrecision = sumIntersection / minSumPredicted;
     }
 
     //Hierarchical Recall
     double hRecall = 0.0;
+
     if (sumReal != 0) {
         hRecall = sumIntersection / sumReal;
     }
@@ -193,12 +181,11 @@ static double evaluationFmeasureLevel(ArrayList<int[]> trueClasses, int[][] pred
 }
 
 /*===========================================================================
-     * Calculate the F-measure for a level, given an array list with the 
-     * position of the classes for the level
-     * Will not penalize over-specialization
-     *===========================================================================*/
+* Calculate the F-measure for a level, given an array list with the 
+* position of the classes for the level
+* Will not penalize over-specialization
+*===========================================================================*/
 public double evaluationFmeasureFitness(double[][] predictedClasses, ArrayList<Integer> indexExamples) {
-
     double fmeasure = 0;
     double sumIntersection = 0;
     double minSumPredicted = 0;
@@ -210,14 +197,11 @@ public double evaluationFmeasureFitness(double[][] predictedClasses, ArrayList<I
     applyThresholds(binaryMatrix, predictedClasses, 0, 0);
 
     for (int i = 0; i < indexExamples.size(); i++) {
-
         int numInst = indexExamples.get(i);
-
         double sumPredictedExample = 0;
         double sumRealExample = 0;
 
         for (int j = 0; j < Classes.getClasses().length; j++) {
-
             if (binaryMatrix[i][j] == 1 && Classes.getBinaryClassesTrain().get(numInst)[j] == 1) {
                 sumIntersection++;
             }
@@ -235,20 +219,22 @@ public double evaluationFmeasureFitness(double[][] predictedClasses, ArrayList<I
         //Get the minimum value. This will not penalize over-specialization
         if (sumPredictedExample < sumRealExample) {
             minSumPredicted += sumPredictedExample;
+
         } else {
             minSumPredicted += sumRealExample;
         }
-
     }
 
     //Hierarchical Precision
     double hPrecision = 0.0;
+
     if (minSumPredicted != 0) {
         hPrecision = sumIntersection / minSumPredicted;
     }
 
     //Hierarchical Recall
     double hRecall = 0.0;
+
     if (sumReal != 0) {
         hRecall = sumIntersection / sumReal;
     }
@@ -259,7 +245,6 @@ public double evaluationFmeasureFitness(double[][] predictedClasses, ArrayList<I
     }
 
     return fmeasure;
-
 }
 
 public double evaluationRecallFitness(double[][] predictedClasses, ArrayList<Integer> indexExamples) {
@@ -292,7 +277,6 @@ public double evaluationRecallFitness(double[][] predictedClasses, ArrayList<Int
 }
 
 public double evaluationPrecisionFitness(double[][] predictedClasses, ArrayList<Integer> indexExamples) {
-    
     double sumIntersection = 0;
     double sumPredicted = 0;
 
@@ -316,17 +300,16 @@ public double evaluationPrecisionFitness(double[][] predictedClasses, ArrayList<
     }
 
     //Hierarchical Precision
-    double hPrecision  = sumIntersection / sumPredicted;
-    
+    double hPrecision = sumIntersection / sumPredicted;
+
     return hPrecision;
 }
 
 /*===========================================================================
-     * Calculate the F-measure for a given prediction of an example
-     * Will not penalize over-specialization
-     *===========================================================================*/
+* Calculate the F-measure for a given prediction of an example
+* Will not penalize over-specialization
+*===========================================================================*/
 public double fMeasurePrediction(int indexExample, double[] prediction) {
-
     double fmeasure = 0;
     double sumIntersection = 0;
     double minSumPredicted = 0;
@@ -334,7 +317,6 @@ public double fMeasurePrediction(int indexExample, double[] prediction) {
     double sumPredicted = 0;
 
     for (int j = 0; j < Classes.getClasses().length; j++) {
-
         if (prediction[j] > 0 && Classes.getBinaryClassesTrain().get(indexExample)[j] == 1) {
             sumIntersection++;
         }
@@ -351,18 +333,21 @@ public double fMeasurePrediction(int indexExample, double[] prediction) {
     //Get the minimum value. This will not penalize over-specialization
     if (sumPredicted < sumReal) {
         minSumPredicted = sumPredicted;
+
     } else {
         minSumPredicted = sumReal;
     }
 
     //Hierarchical Precision
     double hPrecision = 0.0;
+
     if (minSumPredicted != 0) {
         hPrecision = sumIntersection / minSumPredicted;
     }
 
     //Hierarchical Recall
     double hRecall = 0.0;
+
     if (sumReal != 0) {
         hRecall = sumIntersection / sumReal;
     }
@@ -373,32 +358,27 @@ public double fMeasurePrediction(int indexExample, double[] prediction) {
     }
 
     return fmeasure;
-
 }
 
 /*===========================================================================
-     * Calculate the AU(PRC) for classes individually
-     *===========================================================================*/
+* Calculate the AU(PRC) for classes individually
+*===========================================================================*/
 static ArrayList<double[]> calculateAUPRCClasses(ArrayList<ArrayList<double[]>> valuesPrecisionRecallClasses) {
-
     ArrayList<double[]> AUPRCClasses = new ArrayList<double[]>();
-
     ArrayList<ArrayList<ArrayList<Double>>> interpolatedPrecisionPoints = new ArrayList<ArrayList<ArrayList<Double>>>();
     ArrayList<ArrayList<ArrayList<Double>>> interpolatedRecallPoints = new ArrayList<ArrayList<ArrayList<Double>>>();
 
     //Iterates over all classes
     int aux = 0;
-    for (int ind = 0; ind < Classes.getClasses().length; ind++) {
 
+    for (int ind = 0; ind < Classes.getClasses().length; ind++) {
         ArrayList<ArrayList<Double>> precision = new ArrayList<ArrayList<Double>>();
         ArrayList<ArrayList<Double>> recall = new ArrayList<ArrayList<Double>>();
         double[] AUPRC = new double[2];
-
         int count = 0;
         double totalTrueClass = 0;
 
         for (int i = valuesPrecisionRecallClasses.size() - 1; i > 0; i--) {
-
             //Recover data for interpolation
             double[] dataInterpolation = getDataInterpolation(valuesPrecisionRecallClasses.get(i).get(aux),
                     valuesPrecisionRecallClasses.get(i - 1).get(aux));
@@ -415,9 +395,7 @@ static ArrayList<double[]> calculateAUPRCClasses(ArrayList<ArrayList<double[]>> 
 
             precision.add(points.get(0));
             recall.add(points.get(1));
-
             count++;
-
         }
 
         interpolatedPrecisionPoints.add(precision);
@@ -425,30 +403,26 @@ static ArrayList<double[]> calculateAUPRCClasses(ArrayList<ArrayList<double[]>> 
 
         AUPRC[0] = calculateAreaUnderCurve(recall, precision);
         AUPRC[1] = totalTrueClass;
+
         AUPRCClasses.add(AUPRC);
         aux++;
-
     }
 
     Results.saveInterpolationClasses(interpolatedPrecisionPoints, interpolatedRecallPoints);
 
     return AUPRCClasses;
-
 }
 
 /*===========================================================================
-     * Calculate the AU(PRC)
-     *===========================================================================*/
+* Calculate the AU(PRC)
+*===========================================================================*/
 static double calculateAUPRC(ArrayList<double[]> valuesPrecisionRecall) {
-
     double AUPRC = 0;
     ArrayList<ArrayList<Double>> precision = new ArrayList<ArrayList<Double>>();
     ArrayList<ArrayList<Double>> recall = new ArrayList<ArrayList<Double>>();
-
     int count = 0;
 
     for (int i = valuesPrecisionRecall.size() - 1; i > 0; i--) {
-
         //Recover data for interpolation
         double[] dataInterpolation = getDataInterpolation(valuesPrecisionRecall.get(i), valuesPrecisionRecall.get(i - 1));
 
@@ -462,9 +436,7 @@ static double calculateAUPRC(ArrayList<double[]> valuesPrecisionRecall) {
 
         precision.add(points.get(0));
         recall.add(points.get(1));
-
         count++;
-
     }
 
     AUPRC = calculateAreaUnderCurve(recall, precision);
@@ -472,18 +444,15 @@ static double calculateAUPRC(ArrayList<double[]> valuesPrecisionRecall) {
     Results.saveInterpolation(recall, precision);
 
     return AUPRC;
-
 }
 
 static double calculateAUPRCFitness(ArrayList<double[]> valuesPrecisionRecall) {
     double AUPRC = 0;
     ArrayList<ArrayList<Double>> precision = new ArrayList<ArrayList<Double>>();
     ArrayList<ArrayList<Double>> recall = new ArrayList<ArrayList<Double>>();
-
     int count = 0;
 
     for (int i = valuesPrecisionRecall.size() - 1; i > 0; i--) {
-
         //Recover data for interpolation
         double[] dataInterpolation = getDataInterpolation(valuesPrecisionRecall.get(i), valuesPrecisionRecall.get(i - 1));
 
@@ -497,23 +466,19 @@ static double calculateAUPRCFitness(ArrayList<double[]> valuesPrecisionRecall) {
 
         precision.add(points.get(0));
         recall.add(points.get(1));
-
         count++;
-
     }
 
     AUPRC = calculateAreaUnderCurve(recall, precision);
 
     return AUPRC;
-
 }
 
 /*===========================================================================
-     * Calculate the area under a curve
-     *===========================================================================*/
+* Calculate the area under a curve
+*===========================================================================*/
 static double calculateAreaUnderCurve(ArrayList<ArrayList<Double>> recall,
         ArrayList<ArrayList<Double>> precision) {
-
     double AUPRC = 0;
     ArrayList<Double> x = new ArrayList<Double>();
     ArrayList<Double> y = new ArrayList<Double>();
@@ -531,14 +496,12 @@ static double calculateAreaUnderCurve(ArrayList<ArrayList<Double>> recall,
     }
 
     return AUPRC;
-
 }
 
 /*===========================================================================
-     * Interpolate points between two P/R values
-     *===========================================================================*/
+* Interpolate points between two P/R values
+*===========================================================================*/
 static ArrayList<ArrayList<Double>> getPoints(double[] dataInterpolation, int count) {
-
     ArrayList<ArrayList<Double>> points = new ArrayList<ArrayList<Double>>();
     ArrayList<Double> prec = new ArrayList<Double>();
     ArrayList<Double> reca = new ArrayList<Double>();
@@ -558,6 +521,7 @@ static ArrayList<ArrayList<Double>> getPoints(double[] dataInterpolation, int co
     double total = dataInterpolation[9];
 
     double param = tpB - tpA;
+
     double newPrec;
     double newReca;
 
@@ -580,6 +544,7 @@ static ArrayList<ArrayList<Double>> getPoints(double[] dataInterpolation, int co
         double fp = fpA + localSkew * (tp - tpA);
         newPrec = tp / (tp + fp);
         newReca = tp / total;
+
         prec.add(newPrec);
         reca.add(newReca);
     }
@@ -591,14 +556,12 @@ static ArrayList<ArrayList<Double>> getPoints(double[] dataInterpolation, int co
     points.add(reca);
 
     return points;
-
 }
 
 /*===========================================================================
-     * Get data values to interpolate two PR points
-     *===========================================================================*/
+* Get data values to interpolate two PR points
+*===========================================================================*/
 static double[] getDataInterpolation(double[] valuesPRA, double[] valuesPRB) {
-
     double[] dataInterpolation = new double[10];
     double localSkew;
 
@@ -617,6 +580,7 @@ static double[] getDataInterpolation(double[] valuesPRA, double[] valuesPRB) {
 
     if ((tpB - tpA) == 0) {
         localSkew = 0;
+
     } else {
         localSkew = (fpB - fpA) / (tpB - tpA);
     }
@@ -633,16 +597,13 @@ static double[] getDataInterpolation(double[] valuesPRA, double[] valuesPRB) {
     dataInterpolation[9] = total;
 
     return dataInterpolation;
-
 }
 
 /* ===========================================================
-     * Apply a threshold to the results obtained
-     * =========================================================== */
+* Apply a threshold to the results obtained
+* =========================================================== */
 static void applyThresholds(int[][] binaryMatrix, double[][] matrixPredictions, double threshold, int multilabel) {
-
     for (int numInst = 0; numInst < binaryMatrix.length; numInst++) {
-
         for (int i = 0; i < binaryMatrix[0].length; i++) {
             binaryMatrix[numInst][i] = getOutputThreshold(matrixPredictions[numInst][i], threshold, multilabel);
         }
@@ -650,21 +611,22 @@ static void applyThresholds(int[][] binaryMatrix, double[][] matrixPredictions, 
 }
 
 /*===========================================================================
-     * Gets a binary prediction given a vector of real values and a threshold
-     *===========================================================================*/
+* Gets a binary prediction given a vector of real values and a threshold
+*===========================================================================*/
 static int getOutputThreshold(double realValue, double threshold, int multilabel) {
-
     int output = 0;
 
     if (multilabel == 1) {
-
         if (realValue >= threshold) {
             output = 1;
+
         } else {
             output = 0;
         }
+
     } else if (realValue > threshold) {
         output = 1;
+
     } else {
         output = 0;
     }
@@ -673,10 +635,9 @@ static int getOutputThreshold(double realValue, double threshold, int multilabel
 }
 
 /*===========================================================================
-     * Hierarchical Precision and Recall evaluation metrics
-     *===========================================================================*/
+* Hierarchical Precision and Recall evaluation metrics
+*===========================================================================*/
 static double[] evaluationPrecRec(ArrayList<int[]> trueClasses, int[][] predictedClasses) {
-
     //Store the results
     double[] evalResults = new double[5];
 
@@ -687,14 +648,12 @@ static double[] evaluationPrecRec(ArrayList<int[]> trueClasses, int[][] predicte
     double FP = 0;
 
     if (Parameters.getHierarchyType().equals("Tree")) {
-
         for (int numInst = 0; numInst < trueClasses.size(); numInst++) {
-
             for (int i = 0; i < trueClasses.get(0).length; i++) {
-
                 if (predictedClasses[numInst][i] == 1 && trueClasses.get(numInst)[i] == 1) {
                     sumIntersection++;
                 }
+
                 if (predictedClasses[numInst][i] == 1) {
                     sumPredicted++;
                 }
@@ -708,12 +667,13 @@ static double[] evaluationPrecRec(ArrayList<int[]> trueClasses, int[][] predicte
                 }
             }
         }
-    } else {
 
+    } else {
         String[] illegalGOclasses = Classes.getIllegalGOclasses();
 
         //Get positions of the illegal classes
         ArrayList<Integer> illegalPositions = new ArrayList<Integer>();
+
         for (int pos = 0; pos < illegalGOclasses.length; pos++) {
             for (int pos2 = 0; pos2 < Classes.getClasses().length; pos2++) {
                 if (illegalGOclasses[pos].equals(Classes.getClasses()[pos2])) {
@@ -724,14 +684,12 @@ static double[] evaluationPrecRec(ArrayList<int[]> trueClasses, int[][] predicte
         }
 
         for (int numInst = 0; numInst < trueClasses.size(); numInst++) {
-
             for (int i = 0; i < trueClasses.get(0).length; i++) {
-
                 if (illegalPositions.contains(i) == false) {
-
                     if (predictedClasses[numInst][i] == 1 && trueClasses.get(numInst)[i] == 1) {
                         sumIntersection++;
                     }
+
                     if (predictedClasses[numInst][i] == 1) {
                         sumPredicted++;
                     }
@@ -750,19 +708,20 @@ static double[] evaluationPrecRec(ArrayList<int[]> trueClasses, int[][] predicte
 
     //Hierarchical Precision
     double hPrecision = 0.0;
+
     if (sumPredicted != 0) {
         hPrecision = sumIntersection / sumPredicted;
     }
 
     //Hierarchical Recall
     double hRecall = 0.0;
+
     if (sumReal != 0) {
         hRecall = sumIntersection / sumReal;
     }
 
     evalResults[0] = hPrecision;
     evalResults[1] = hRecall;
-
     evalResults[2] = sumIntersection; //TP
     evalResults[3] = FP;              //FP
     evalResults[4] = sumReal;         //True
@@ -771,16 +730,14 @@ static double[] evaluationPrecRec(ArrayList<int[]> trueClasses, int[][] predicte
 }
 
 /*===========================================================================
-     * Hierarchical Precision and Recall evaluation metrics for each class
-     *===========================================================================*/
+* Hierarchical Precision and Recall evaluation metrics for each class
+*===========================================================================*/
 static ArrayList<double[]> evaluationPrecRecClasses(ArrayList<int[]> trueClasses, int[][] predictedClasses) {
-
     //Store the results
     ArrayList<double[]> evalResultsClasses = new ArrayList<double[]>();
 
     //Iterates over all classes
     for (int i = 0; i < trueClasses.get(0).length; i++) {
-
         double[] evalResults = new double[5];
 
         //Sum of predicted and real classes
@@ -791,10 +748,10 @@ static ArrayList<double[]> evaluationPrecRecClasses(ArrayList<int[]> trueClasses
 
         //Iterates over all test instances
         for (int numInst = 0; numInst < trueClasses.size(); numInst++) {
-
             if (predictedClasses[numInst][i] == 1 && trueClasses.get(numInst)[i] == 1) {
                 sumIntersection++;
             }
+
             if (predictedClasses[numInst][i] == 1) {
                 sumPredicted++;
             }
@@ -810,19 +767,20 @@ static ArrayList<double[]> evaluationPrecRecClasses(ArrayList<int[]> trueClasses
 
         //Hierarchical Precision
         double hPrecision = 0.0;
+
         if (sumPredicted != 0) {
             hPrecision = sumIntersection / sumPredicted;
         }
 
         //Hierarchical Recall
         double hRecall = 0.0;
+
         if (sumReal != 0) {
             hRecall = sumIntersection / sumReal;
         }
 
         evalResults[0] = hPrecision;
         evalResults[1] = hRecall;
-
         evalResults[2] = sumIntersection; //TP
         evalResults[3] = FP;              //FP
         evalResults[4] = sumReal;         //True
@@ -844,4 +802,5 @@ public double[] getFmeasureLevels() {
 public ArrayList<double[]> getAUPRCClasses() {
     return AUPRCClasses;
 }
+
 }

@@ -30,14 +30,11 @@ private static String[] illegalGOclasses = {"GO0003674", "GO0005575", "GO0008150
 //private static String[] illegalGOclasses = {};
 
 /* ===========================================================
-     * Set a vector with all classes of the DAG structure
-     * =========================================================== */
+* Set a vector with all classes of the DAG structure
+* =========================================================== */
 public static void setDAGclasses(String lineClasses, String tokenHierarchical) {
-
     DAGrelationships = new ArrayList<ArrayList<String>>();
-
     ArrayList<String> classesAux = new ArrayList<String>();
-
     String[] vetLine = lineClasses.split(tokenHierarchical);
     String[] classesAux2 = vetLine[1].split(",");
 
@@ -47,13 +44,12 @@ public static void setDAGclasses(String lineClasses, String tokenHierarchical) {
     ArrayList<String> children = new ArrayList<String>();
 
     classesAux.add(classesAux2[0].split("/")[1].trim());
-
     parents.add(classesAux2[0].split("/")[0].trim());
     children.add(classesAux2[0].split("/")[1].trim());
 
     for (int i = 1; i < classesAux2.length; i++) {
         String[] classesAux3 = classesAux2[i].split("/");
-
+        
         parents.add(classesAux3[0].trim());
         children.add(classesAux3[1].trim());
 
@@ -68,6 +64,7 @@ public static void setDAGclasses(String lineClasses, String tokenHierarchical) {
 
     //Vector with all classes
     classes = new String[classesAux.size()];
+
     for (int i = 0; i < classesAux.size(); i++) {
         classes[i] = classesAux.get(i);
     }
@@ -79,14 +76,12 @@ public static void setDAGclasses(String lineClasses, String tokenHierarchical) {
     //Weighting scheme for the classes
     weightingScheme = new double[classes.length];
     setWeightingScheme(weightingScheme);
-
 }
 
 /* ===========================================================
-     * Set a vector with all classes of the tree structure
-     * =========================================================== */
+* Set a vector with all classes of the tree structure
+* =========================================================== */
 public static void setTreeClasses(String lineClasses, String tokenHierarchical) {
-
     String[] vetLine = lineClasses.split(tokenHierarchical);
     classes = vetLine[1].split(",");
     classes[0] = classes[0].trim();
@@ -97,13 +92,11 @@ public static void setTreeClasses(String lineClasses, String tokenHierarchical) 
 
     //Set the position of the classes by level
     positionClassesLevel = setPositionClassesLevel();
-
-    //System.out.println();
 }
 
 /*===========================================================================
-     * Get position of classes by level
-     *===========================================================================*/
+* Get position of classes by level
+*===========================================================================*/
 public static ArrayList<ArrayList<Integer>> setPositionClassesLevel() {
     ArrayList<ArrayList<Integer>> positionClassesLevels = new ArrayList<ArrayList<Integer>>();
     String rootClass = "";
@@ -129,10 +122,9 @@ public static ArrayList<ArrayList<Integer>> setPositionClassesLevel() {
 }
 
 /* ===========================================================
-     * Set the mean class label vector considering all classes of the dataset
-     * =========================================================== */
+* Set the mean class label vector considering all classes of the dataset
+* =========================================================== */
 public static void setMeanClassLabelVectorAll() {
-
     for (int i = 0; i < binaryClassesTrain.size(); i++) {
         for (int j = 0; j < classes.length; j++) {
             meanClassLabelVectorAllClasses[j] += binaryClassesTrain.get(i)[j];
@@ -145,10 +137,10 @@ public static void setMeanClassLabelVectorAll() {
 }
 
 /* ===========================================================
-     * Set weights for the classes according to Vens et al, 2008
-     * Decision Trees for Hierarchical Multi-Label Classification
-     * Machine Learning 73(2):185-214
-     * =========================================================== */
+* Set weights for the classes according to Vens et al, 2008
+* Decision Trees for Hierarchical Multi-Label Classification
+* Machine Learning 73(2):185-214
+* =========================================================== */
 private static void setWeightingScheme(double[] weightingScheme) {
     //The top level classes of the hierarchy receive a weigthing value of 0.75
     ArrayList<Integer> topLevelClassesPositions = getTopLevelClassesPositions();
@@ -161,7 +153,7 @@ private static void setWeightingScheme(double[] weightingScheme) {
             superClassesPositions.add(topLevelClassesPositions.get(i));
             setTreeClassesWeights(weightingScheme, rootClass, superClassesPositions);
         }
-
+        
     } else {//DAG hierarchy
         for (int i = 0; i < topLevelClassesPositions.size(); i++) {
             weightingScheme[topLevelClassesPositions.get(i)] = 0.75;
@@ -171,17 +163,16 @@ private static void setWeightingScheme(double[] weightingScheme) {
             setDAGClassesWeights(weightingScheme, rootClass);
         }
     }
-    //System.out.println();
 }
 
 /* ===========================================================
-     * Recursive method to set the weights of the DAG classes
-     * given a root class
-     * =========================================================== */
+* Recursive method to set the weights of the DAG classes
+* given a root class
+* =========================================================== */
 private static void setDAGClassesWeights(double[] weightingScheme, String rootClass) {
-
     //Get the closest children of the root class
     ArrayList<String> children = new ArrayList<String>();
+
     for (int i = 0; i < DAGrelationships.get(0).size(); i++) {
         if (DAGrelationships.get(0).get(i).equals(rootClass) == true) {
             children.add(DAGrelationships.get(1).get(i));
@@ -191,12 +182,12 @@ private static void setDAGClassesWeights(double[] weightingScheme, String rootCl
     //Get all parent classes of each children class, as a class
     //can have more than one superclass
     for (int i = 0; i < children.size(); i++) {
-
         //Gets the position of this child class in classes
         int posChild = 0;
         ArrayList<String> parents = new ArrayList<String>();
         HashSet hs = new HashSet();
         ArrayList<Integer> superClassesPositions = new ArrayList<Integer>();
+
         for (int j = 0; j < classes.length; j++) {
             if (children.get(i).equals(classes[j]) == true) {
                 posChild = j;
@@ -228,14 +219,12 @@ private static void setDAGClassesWeights(double[] weightingScheme, String rootCl
                     }
                 }
             }
+
             if (notSet == 1) {
                 break;
             }
         }
 
-        //if (children.get(i).equals("GO0000173")) {
-        //    System.out.println();
-        //}
         //If all parent weights are set, calculate the weight
         //and call the method using the actual child class
         if (notSet == 0) {
@@ -248,16 +237,15 @@ private static void setDAGClassesWeights(double[] weightingScheme, String rootCl
             }
 
             weightingScheme[posChild] = 0.75 * (sum / numParents);
-
             setDAGClassesWeights(weightingScheme, children.get(i));
         }
     }
 }
 
 /* ===========================================================
-     * Recursive method to set the weights of the Tree classes
-     * given a root class
-     * =========================================================== */
+* Recursive method to set the weights of the Tree classes
+* given a root class
+* =========================================================== */
 private static void setTreeClassesWeights(double[] weightingScheme, String rootClass, ArrayList<Integer> superClassesPositionsAux) {
     //Get the children of the root class in the next level
     rootClass = rootClass.concat("/[0-9]+");
@@ -285,10 +273,9 @@ private static void setTreeClassesWeights(double[] weightingScheme, String rootC
 }
 
 /* ===========================================================
-     * Get the top level classes of the hierarchy
-     * =========================================================== */
+* Get the top level classes of the hierarchy
+* =========================================================== */
 public static ArrayList<Integer> getTopLevelClassesPositions() {
-
     ArrayList<Integer> topLevelClassesPositions = new ArrayList<Integer>();
 
     if (Parameters.getHierarchyType().equals("Tree")) {//Tree hierarchy
@@ -297,6 +284,7 @@ public static ArrayList<Integer> getTopLevelClassesPositions() {
                 topLevelClassesPositions.add(i);
             }
         }
+        
     } else {//DAG hierarchy
         for (int i = 0; i < DAGrelationships.get(0).size(); i++) {
             if (DAGrelationships.get(0).get(i).equals(Datasets.getTokenRootClass()) == true) {
@@ -314,8 +302,8 @@ public static ArrayList<Integer> getTopLevelClassesPositions() {
 }
 
 /* ===========================================================
-     * Build the binary structure to store the dataset's classes
-     * =========================================================== */
+* Build the binary structure to store the dataset's classes
+* =========================================================== */
 public static void buildClassesStructureTrain() {
     int numberClasses = 0;
     numberClasses = classes.length;
@@ -339,16 +327,11 @@ public static void buildClassesStructureTrain() {
     //Set the mean class label vector considering all classes
     meanClassLabelVectorAllClasses = new double[classes.length];
     setMeanClassLabelVectorAll();
-
-    //System.out.println();
 }
 
 public static void buildClassesStructureValid() {
-
     int numberClasses = 0;
-
     numberClasses = classes.length;
-
     binaryClassesValid = new ArrayList<int[]>();
 
     //Valid dataset
@@ -414,8 +397,8 @@ public static void buildClassesStructureTest() {
 }
 
 /* ===========================================================
-     * Get the positions given classes in the binary vector
-     * =========================================================== */
+* Get the positions given classes in the binary vector
+* =========================================================== */
 public static ArrayList<Integer> getPosClasses(String actualClasses) {
     ArrayList<Integer> positions = new ArrayList<Integer>();
     String[] vectorClasses = actualClasses.split("@");
@@ -430,7 +413,7 @@ public static ArrayList<Integer> getPosClasses(String actualClasses) {
                 }
             }
         }
-
+        
     } else if ("DAG".equals(Parameters.getHierarchyType())) {
         allClasses.remove(Datasets.getTokenRootClass());
 
@@ -448,8 +431,8 @@ public static ArrayList<Integer> getPosClasses(String actualClasses) {
 }
 
 /* ===========================================================
-     * Given a vector with classes, return all classes in all levels
-     * =========================================================== */
+* Given a vector with classes, return all classes in all levels
+* =========================================================== */
 public static ArrayList<String> getAllPossibleClasses(String[] vectorClasses) {
     ArrayList<String> allClasses = new ArrayList<String>();
 
@@ -469,17 +452,15 @@ public static ArrayList<String> getAllPossibleClasses(String[] vectorClasses) {
                 }
             }
         }
-
+        
     } else if ("DAG".equals(Parameters.getHierarchyType())) {
         ArrayList<String> DAGclasses = new ArrayList<String>();
 
         for (int i = 0; i < vectorClasses.length; i++) {
             DAGclasses.add(vectorClasses[i]);
             getAllPossibleDAGclasses(DAGclasses, vectorClasses[i]);
-
             allClasses.addAll(DAGclasses);
         }
-
     }
 
     //Eliminate duplicated classes
@@ -489,14 +470,12 @@ public static ArrayList<String> getAllPossibleClasses(String[] vectorClasses) {
     allClasses.addAll(hs);
 
     return allClasses;
-
 }
 
 /* ===========================================================
-     * Recursive function to get parent classes of a given DAG class
-     * =========================================================== */
+* Recursive function to get parent classes of a given DAG class
+* =========================================================== */
 private static void getAllPossibleDAGclasses(ArrayList<String> DAGclasses, String DAGclass) {
-
     ArrayList<String> parents = DAGrelationships.get(0);
     ArrayList<String> children = DAGrelationships.get(1);
 
@@ -539,4 +518,5 @@ public static String[] getIllegalGOclasses() {
 public static ArrayList<ArrayList<Integer>> getPositionClassesLevel() {
     return positionClassesLevel;
 }
+
 }

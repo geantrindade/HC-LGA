@@ -2,7 +2,6 @@ package br.ufscar.hclga.classes;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 /**
  *
@@ -19,15 +18,18 @@ public Evolution(Population population, boolean multiObj) {
 
     //Initializing current population
     int populationSize = Parameters.getNumberInitialRules();
-
     int obj = 0;
+
     if (multiObj == false) {
         obj = 1;
+
         for (int i = 0; i < populationSize; i++) {
             currentPopulation.add(new Individual(population.getPopulation().get(i), population.getActiveTerms().get(i), multiObj));
         }
+
     } else {
         obj = 2;
+
         for (int i = 0; i < population.getPopulation().size(); i++) {
             currentPopulation.add(new Individual(population.getPopulation().get(i), population.getActiveTerms().get(i), multiObj));
         }
@@ -37,9 +39,10 @@ public Evolution(Population population, boolean multiObj) {
     bestIndividual = new Individual(currentPopulation.get(0).getRule().clone(), currentPopulation.get(0).getPosActiveTerms(), multiObj);
 
     backupInitialPopulation = currentPopulation; //storage for future check
+    ArrayList<Individual> nextPopulation = new ArrayList<Individual>();
 
     ArrayList<Individual> children;
-    ArrayList<Individual> nextPopulation = new ArrayList<Individual>();
+
     int numGenerations = 1;
     int attempts = 1;
     int generationReboots = 0;
@@ -63,7 +66,6 @@ public Evolution(Population population, boolean multiObj) {
     while (numGenerations <= Parameters.getNumberGenerations() && attempts <= Parameters.getNumberAttempts()) {
         System.out.println("\ngeneration " + numGenerations);
         System.out.println("attempt " + attempts);
-
         System.out.println("fitness best rule: " + bestIndividual.getFitness());
 
         // max value reached, so dont need to keeping searching
@@ -72,7 +74,6 @@ public Evolution(Population population, boolean multiObj) {
 
             for (Individual i : currentPopulation) { //check if other individuals got good values
                 if (i.getHFmeasure() >= Parameters.getMaxFitnessTh()) {
-
                     //for objective 1
                     if (multiObj == false) {
 
@@ -103,7 +104,6 @@ public Evolution(Population population, boolean multiObj) {
 
                         //for objective 2
                     } else if (i.getFitness(1) >= bestIndividual.getFitness(1)) {
-
                         if (i.getFitness(0) > bestIndividual.getFitness(0)) {
                             System.out.println("similar or better value for obj2!");
                             System.out.println("HIGHER value for obj1!");
@@ -126,6 +126,7 @@ public Evolution(Population population, boolean multiObj) {
                             bestIndividual = i;
                         }
                     }
+
                 } else {
                     break;
                 }
@@ -257,6 +258,7 @@ public Evolution(Population population, boolean multiObj) {
 
                 //reset
                 attempts = 0;
+
             } else {
                 System.out.println("\nmin fitness threshold achieved!!!");
             }
@@ -337,7 +339,6 @@ public Evolution(Population population, boolean multiObj) {
     Parameters.setMinCoveredExamplesRule(auxMinCov);
     Parameters.setMaxCoveredExamplesRule(auxMaxCov);
     Parameters.setSizeTournament(auxTournament);
-
 }//end constructor
 
 public ArrayList<Individual> getCurrentPopulation() {
@@ -347,4 +348,5 @@ public ArrayList<Individual> getCurrentPopulation() {
 public Individual getBestIndividual() {
     return bestIndividual;
 }
+
 }

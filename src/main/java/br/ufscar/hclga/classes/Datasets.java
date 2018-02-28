@@ -66,7 +66,6 @@ public Datasets() {
         //==================================================================
         FileReader readerTrain = new FileReader(pathDatasetTrain);
         BufferedReader rTrain = new BufferedReader(readerTrain);
-
         String line = null;
         int dataFound = 0;
 
@@ -79,6 +78,7 @@ public Datasets() {
                 //See if reached @DATA token
                 if (mData.find()) {
                     dataFound = 1;
+
                 } //See if @ATTRIBUTE token was found
                 else if (mAttribute.find()) {
                     numAttribute++;
@@ -119,6 +119,7 @@ public Datasets() {
                         categoricMapping.add(mapping);
                     }
                 }
+            
             } //Token @DATA was found
             else {
                 String[] vetLine = line.split(",");
@@ -128,39 +129,7 @@ public Datasets() {
 
         rTrain.close();
         readerTrain.close();
-        //==================================================================
-
-//            //Read valid dataset to append to training dataset
-//            //==================================================================
-//            FileReader readerValid = new FileReader(pathDatasetValid);
-//            BufferedReader rValid = new BufferedReader(readerValid);
-//            line = null;
-//            dataFound = 0;
-//
-//            while ((line = rValid.readLine()) != null) {
-//
-//                //Just read the file util do not find @DATA token
-//                if (dataFound == 0) {
-//
-//                    Matcher mData = patternData.matcher(line);
-//
-//                    //See if reached @DATA token
-//                    if (mData.find()) {
-//                        dataFound = 1;
-//                    }
-//                } //Token @DATA was found
-//                else {
-//                    String[] vetLine = line.split(",");
-//                    datasetValid.add(vetLine);
-//                }
-//            }
-//            rValid.close();
-//            readerValid.close();
-//
-//            datasetTrain.addAll(datasetValid);
-//            datasetValid.clear();
-//            //==================================================================
-        //System.out.println();
+  
     } catch (IOException ioe) {
         ioe.printStackTrace();
     }
@@ -170,8 +139,8 @@ public Datasets() {
 }
 
 /* ===========================================================
-     * Load the test data
-     * =========================================================== */
+* Load the test data
+* =========================================================== */
 public void readTestData(String pathDatasetTest) {
     datasetTest = new ArrayList<String[]>();
 //        String pathDatasetTest = Paths.getPathDatasets() + Parameters.getFileDatasetTest();
@@ -210,8 +179,8 @@ public void readTestData(String pathDatasetTest) {
 }
 
 /* ===========================================================
-     * Get the means and modes to substitute missing values
-     * =========================================================== */
+* Get the means and modes to substitute missing values
+* =========================================================== */
 private void setMeansAndModesTrain() {
     int numAttributes = infoAttributes.size();
 
@@ -274,71 +243,10 @@ private void setMeansAndModesTrain() {
 
     meanValues.add(replaceValues);
     modeValues.add(catReplaceValues);
-    //---------------------------------------------------
-
-    //Valid dataset
-    //---------------------------------------------------
-    /*numExamples = datasetValid.size();
-         replaceValues = new double[numAttributes];
-         catReplaceValues = new ArrayList<String>();
-         numCategoricAttribute = 0;
-        
-         for (int i = 0; i < numAttributes; i++) {
-         if (infoAttributes.get(i) == 1) { //numeric attribute
-        
-         double sum = 0;
-         double mean = 0;
-         int numNotMissing = 0;
-        
-         for (int j = 0; j < numExamples; j++) {
-        
-         String value = datasetValid.get(j)[i];
-         if (value.equals(tokenMissingValue) == false) {
-         sum += Double.parseDouble(value);
-         numNotMissing++;
-         }
-         }
-        
-         mean = sum / numNotMissing;
-         replaceValues[i] = mean;
-         } else { //categoric attibute
-        
-         replaceValues[i] = numCategoricAttribute;
-        
-         numCategoricAttribute++;
-        
-         ArrayList<String> domainValues = new ArrayList<String>();
-         ArrayList<String> allValues = new ArrayList<String>();
-        
-         for (int j = 0; j < numExamples; j++) {
-        
-         String value = datasetValid.get(j)[i];
-         if (value.equals(tokenMissingValue) == false) {
-         domainValues.add(value);
-         allValues.add(value);
-         }
-         }
-        
-         //Eliminate duplicated classes
-         HashSet hs = new HashSet();
-         hs.addAll(domainValues);
-         domainValues.clear();
-         domainValues.addAll(hs);
-        
-         //Get the value that appears most often in the set
-         String mostFrequent = getMostFrequentValue(domainValues, allValues);
-        
-         catReplaceValues.add(mostFrequent);
-         }
-         }
-        
-         meanValues.add(replaceValues);
-         modeValues.add(catReplaceValues);*/
 }
 
 private void setMeansAndModesTest() {
     int numAttributes = infoAttributes.size();
-
     int numExamples = datasetTest.size();
     double[] replaceValues = new double[numAttributes];
     ArrayList<String> catReplaceValues = new ArrayList<String>();
@@ -397,11 +305,10 @@ private void setMeansAndModesTest() {
 }
 
 /* ===========================================================
-     * Get the most frequent categoric value of a given attribute
-     * =========================================================== */
+* Get the most frequent categoric value of a given attribute
+* =========================================================== */
 private String getMostFrequentValue(ArrayList<String> domainValues, ArrayList<String> allValues) {
     String mostFrequent = "";
-
     int[] counts = new int[domainValues.size()];
 
     //Count the elements
@@ -424,8 +331,8 @@ private String getMostFrequentValue(ArrayList<String> domainValues, ArrayList<St
 }
 
 /* ===========================================================
-     * Get the index of the maximum element in the array
-     * =========================================================== */
+* Get the index of the maximum element in the array
+* =========================================================== */
 private int getMaxIndex(int[] counts) {
     int maxIndex = 0;
     int max = counts[0];
@@ -441,8 +348,8 @@ private int getMaxIndex(int[] counts) {
 }
 
 /* ===========================================================
-     * Get the possible values for a categoric attribute
-     * =========================================================== */
+* Get the possible values for a categoric attribute
+* =========================================================== */
 private String getCategoricValues(String line) {
     String[] values = line.split("\\{");
     String[] values2 = values[1].split("}");
@@ -451,8 +358,8 @@ private String getCategoricValues(String line) {
 }
 
 /* ===========================================================
-     * Get the name of the attribute
-     * =========================================================== */
+* Get the name of the attribute
+* =========================================================== */
 public String getAttributeName(String line, int typeAttribute) {
     String attributeName = "";
 
@@ -473,25 +380,24 @@ public String getAttributeName(String line, int typeAttribute) {
 }
 
 /* ===========================================================
-     * Map the possible values that can be put in a categoric clausule
-     * These include combinations of values for the "in" operator
-     * =========================================================== */
+* Map the possible values that can be put in a categoric clausule
+* These include combinations of values for the "in" operator
+* =========================================================== */
 private ArrayList<String[]> mapPossibleCategoricValues(String stringValues) {
     possibleCombinations = new ArrayList<String[]>();
-
     String[] possibleValues = stringValues.split(",");
     String[] aux = new String[possibleValues.length + 1];
-
     aux[0] = "\\0";
+    
     getCombinations(possibleValues, aux, 0);
 
     return possibleCombinations;
 }
 
 /* ===========================================================
-     * Get all possible combinations of the categorical attributes
-     * happening together
-     * =========================================================== */
+* Get all possible combinations of the categorical attributes
+* happening together
+* =========================================================== */
 private void getCombinations(String[] possibleValues, String[] actual, int pos) {
     int size = getSize(actual);
 
@@ -509,9 +415,9 @@ private void getCombinations(String[] possibleValues, String[] actual, int pos) 
 
 
 /* ===========================================================
-     * Auxiliary to get the size of a string.
-     * The character '\\0' represents the end of the string
-     * =========================================================== */
+* Auxiliary to get the size of a string.
+* The character '\\0' represents the end of the string
+* =========================================================== */
 private int getSize(String[] actual) {
     int size = 0;
 
@@ -526,8 +432,8 @@ private int getSize(String[] actual) {
 }
 
 /* ===========================================================
-     * Verify if a given attribute value is present in a given example
-     * =========================================================== */
+* Verify if a given attribute value is present in a given example
+* =========================================================== */
 public static boolean verifyAttributeValue(String attributeValue, String[] example) {
     boolean present = false;
 
@@ -542,8 +448,8 @@ public static boolean verifyAttributeValue(String attributeValue, String[] examp
 }
 
 /* ===========================================================
-     * Remove examples from the dataset, given their indexes
-     * =========================================================== */
+* Remove examples from the dataset, given their indexes
+* =========================================================== */
 public static void removeTrainExamples(ArrayList<Integer> indexesCoveredExamples) {
     Collections.sort(indexesCoveredExamples, Collections.reverseOrder());
 
@@ -553,8 +459,8 @@ public static void removeTrainExamples(ArrayList<Integer> indexesCoveredExamples
 }
 
 /* ===========================================================
-     * Free memory of dataset test
-     * =========================================================== */
+* Free memory of dataset test
+* =========================================================== */
 public void freeTestDataset() {
     datasetTest.clear();
 }

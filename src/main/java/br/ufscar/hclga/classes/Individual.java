@@ -27,8 +27,8 @@ public Individual(double[] rule, ArrayList<Integer> activeTerms, boolean multiOb
 }
 
 /* ===========================================================
-     * Calculate the fitness of the rules
-     * =========================================================== */
+* Calculate the fitness of the rules
+* =========================================================== */
 public void calculateFitness(boolean multiObj) {
 //    setFitness(0.0);
     numberCoveredExamples = 0;
@@ -40,7 +40,6 @@ public void calculateFitness(boolean multiObj) {
     meanClassLabelVectorUncovered = new double[Classes.getClasses().length];
 
     for (int i = 0; i < Datasets.getDatasetTrain().size(); i++) {
-
         String[] example = Datasets.getDatasetTrain().get(i);
 
         //Verify if the rule covers the example
@@ -50,6 +49,7 @@ public void calculateFitness(boolean multiObj) {
         if (coverage == 1) { //Rule satisfies example
             //coveredExamples.add(example);
             indexCoveredExamples.add(i);
+
         } else {
             indexUncoveredExamples.add(i);
         }
@@ -122,6 +122,7 @@ public double getHPrecision() {
     Evaluation evaluation = new Evaluation();
 
     double term1 = 0;
+
     if (indexCoveredExamples.size() >= Parameters.getMinCoveredExamplesRule()) {
         term1 = evaluation.evaluationPrecisionFitness(matrixPredictions, indexCoveredExamples);
     }
@@ -152,6 +153,7 @@ public double getHRecall() {
 
 public double getHFmeasure() {
     double[][] matrixPredictions = new double[numberCoveredExamples][Classes.getClasses().length];
+
     for (int i = 0; i < numberCoveredExamples; i++) {
         System.arraycopy(meanClassLabelVectorCovered, 0, matrixPredictions[i], 0, Classes.getClasses().length);
     }
@@ -163,6 +165,7 @@ public double getHFmeasure() {
     Evaluation evaluation = new Evaluation();
     //F-measure
     double term1 = 0;
+
     if (indexCoveredExamples.size() >= Parameters.getMinCoveredExamplesRule()) {
         term1 = evaluation.evaluationFmeasureFitness(matrixPredictions, indexCoveredExamples);
     }
@@ -174,7 +177,6 @@ public double getVarianceGain() {
     double varianceGain = 0;
 
     if (indexCoveredExamples.size() >= Parameters.getMinCoveredExamplesRule()) {
-
         double[][] matrixPredictions = new double[numberCoveredExamples][Classes.getClasses().length];
         for (int i = 0; i < numberCoveredExamples; i++) {
             System.arraycopy(meanClassLabelVectorCovered, 0, matrixPredictions[i], 0, Classes.getClasses().length);
@@ -210,9 +212,11 @@ public double getAUPRC() {
 
     //Obtain the predictions
     double[][] matrixPredictions = new double[numberCoveredExamples][Classes.getClasses().length];
+
     for (int i = 0; i < numberCoveredExamples; i++) {
         System.arraycopy(meanClassLabelVectorCovered, 0, matrixPredictions[i], 0, Classes.getClasses().length);
     }
+
     Evaluation evaluation = new Evaluation();
 
     if (indexCoveredExamples.size() >= Parameters.getMinCoveredExamplesRule()) {
@@ -226,24 +230,19 @@ public double getAUPRC() {
 //public void testeFitnessFmeasurePercentageCoverageConfig2() {
 //    setFitness(0.2 * getHFmeasure() + 0.8 * percentageCoverage);
 //}
-
 //public void testeFitnessVarianceGainPercentageCoverageConfig4() {
 //    setFitness((0.4 * getVarianceGain()) + (0.6 * percentageCoverage));
 //}
-
 //public void testeFitnessVarianceGainPercentageCoverageConfig9() {
 //    setFitness((0.9 * getVarianceGain()) + (0.1 * percentageCoverage));
 //}
-
 //public void testeFitnessAUPRCVarianceGainConfig3() {
 //    setFitness(0.3 * getAUPRC() + 0.7 * getVarianceGain());
 //}
-
 //public void testeFitnessAUPRCVarianceGainPonderadoConfig12() {
 //    double AUPRC = getAUPRC();
 //    setFitness(0.1 * AUPRC + 0.9 * fitness / AUPRC);
 //}
-
 //public void testeFitnessAUPRCPercentageCoveragePonderadoConfig6() {
 //    double AUPRC = getAUPRC();
 //    setFitness(0.5 * AUPRC + 0.5 * percentageCoverage / AUPRC);
@@ -251,14 +250,14 @@ public double getAUPRC() {
 //************************* Fitness Functions ******************************
 
 /* ===========================================================
-     * Calculate the variance gain of a rule
-     * =========================================================== */
+* Calculate the variance gain of a rule
+* =========================================================== */
 public void varianceGainRule(int indexFitness) {
-
     //Fitness = 0 to rules that do not cover the minimum number of examples
     if (indexCoveredExamples.size() >= Parameters.getMinCoveredExamplesRule()) {
 
         double[][] matrixPredictions = new double[numberCoveredExamples][Classes.getClasses().length];
+
         for (int i = 0; i < numberCoveredExamples; i++) {
             System.arraycopy(meanClassLabelVectorCovered, 0, matrixPredictions[i], 0, Classes.getClasses().length);
         }
@@ -345,31 +344,30 @@ public void varianceGainRule(int indexFitness) {
 }
 
 /* ===========================================================
-     * Calculate the variance gain of a set of examples given the
-     * examples and their meanClassLabel
-     * =========================================================== */
+* Calculate the variance gain of a set of examples given the
+* examples and their meanClassLabel
+* =========================================================== */
 public double getVarianceGain(int numExamples, double[] meanClassLabel) {
-
     double varianceGain = 0;
     double[] weights = Classes.getWeightingScheme();
     ArrayList<int[]> binaryClasses = Classes.getBinaryClassesTrain();
 
     for (int i = 0; i < numExamples; i++) {
         double sum = 0;
+
         for (int j = 0; j < meanClassLabel.length; j++) {
             sum += weights[j] * Math.pow((binaryClasses.get(i)[j] - meanClassLabel[j]), 2);
         }
+
         varianceGain += sum;
     }
 
     varianceGain = varianceGain / numExamples;
 
     return varianceGain;
-
 }
 
 public double getVarianceGain(ArrayList<Integer> indexExamples, double[] meanClassLabel) {
-
     double varianceGain = 0;
     double[] weights = Classes.getWeightingScheme();
     ArrayList<int[]> binaryClasses = Classes.getBinaryClassesTrain();
@@ -377,9 +375,11 @@ public double getVarianceGain(ArrayList<Integer> indexExamples, double[] meanCla
     for (int i = 0; i < indexExamples.size(); i++) {
         double sum = 0;
         int[] binaryVector = binaryClasses.get(indexExamples.get(i));
+
         for (int j = 0; j < meanClassLabel.length; j++) {
             sum += weights[j] * Math.pow((binaryVector[j] - meanClassLabel[j]), 2);
         }
+
         varianceGain += sum;
     }
 
@@ -392,22 +392,18 @@ public double getVarianceGain(ArrayList<Integer> indexExamples, double[] meanCla
 
 
 /* ===========================================================
-     * Calculate the mean class label vector of the classes of a
-     * given set of examples
-     * =========================================================== */
+* Calculate the mean class label vector of the classes of a
+* given set of examples
+* =========================================================== */
 public void setMeanClassLabelVector() {
-
     ArrayList<int[]> binaryClasses = Classes.getBinaryClassesTrain();
 
     //Covered examples
     for (int i = 0; i < indexCoveredExamples.size(); i++) {
-
         int[] binaryVector = binaryClasses.get(indexCoveredExamples.get(i));
 
         for (int j = 0; j < binaryVector.length; j++) {
-
             meanClassLabelVectorCovered[j] += binaryVector[j];
-
         }
     }
 
@@ -419,13 +415,10 @@ public void setMeanClassLabelVector() {
 
     //Uncovered examples
     for (int i = 0; i < indexUncoveredExamples.size(); i++) {
-
         int[] binaryVector = binaryClasses.get(indexUncoveredExamples.get(i));
 
         for (int j = 0; j < binaryVector.length; j++) {
-
             meanClassLabelVectorUncovered[j] += binaryVector[j];
-
         }
     }
 
@@ -443,14 +436,12 @@ public void setMeanClassLabelVector() {
 }
 
 /* ===========================================================
-     * Verify if the rule covers a given example
-     * =========================================================== */
+* Verify if the rule covers a given example
+* =========================================================== */
 public int verifyRule(String[] example, double[] rule, int data) {
-
     int coverage = 0;
 
     for (int i = 0; i < posActiveTerms.size(); i++) {
-
         int pos = posActiveTerms.get(i);
         int posAttribute = pos / 4;
         //Verify if the term is used in the rule
@@ -465,6 +456,7 @@ public int verifyRule(String[] example, double[] rule, int data) {
         if (Datasets.getInfoAttributes().get(posAttribute) == 1) { //Numeric attribute
             if (Datasets.getTokenMissingValue().equals(example[posAttribute]) == true) {
                 attributeValue = Datasets.getMeanValues().get(data)[posAttribute];
+
             } else {
                 attributeValue = Double.parseDouble(example[posAttribute]);
             }
@@ -497,6 +489,7 @@ public int verifyRule(String[] example, double[] rule, int data) {
             if (Datasets.getTokenMissingValue().equals(example[posAttribute]) == true) {
                 int posCatValue = (int) Datasets.getMeanValues().get(data)[posAttribute];
                 catAttributeValue = Datasets.getModeValues().get(data).get(posCatValue);
+
             } else {
                 catAttributeValue = example[posAttribute];
             }
@@ -529,33 +522,32 @@ public int verifyRule(String[] example, double[] rule, int data) {
 }
 
 /* ===========================================================
-     * Verify if a given attribute value is lower than 
-     * another attribute value
-     * =========================================================== */
+* Verify if a given attribute value is lower than 
+* another attribute value
+* =========================================================== */
 public static int compareAttributes(int pos1, double attributeValue2, String[] example) {
-
     double valueAttribute1 = 0;
 
     if (Datasets.getTokenMissingValue().equals(example[pos1]) == true) {
         valueAttribute1 = Datasets.getMeanValues().get(0)[pos1];
+
     } else {
         valueAttribute1 = Double.parseDouble(example[pos1]);
     }
 
     if (valueAttribute1 <= attributeValue2) {
         return 1;
+
     } else {
         return 0;
     }
-
 }
 
 /* ===========================================================
-     * Verify if the categoric example value X is among a given
-     * set os categorical values
-     * =========================================================== */
+* Verify if the categoric example value X is among a given
+* set os categorical values
+* =========================================================== */
 public static int among(String catAttributeValue, String[] categoricValuesCondition) {
-
     int found = 0;
 
     for (int i = 0; i < categoricValuesCondition.length; i++) {
@@ -569,88 +561,81 @@ public static int among(String catAttributeValue, String[] categoricValuesCondit
 }
 
 /* ===========================================================
-     * Verify if the example value X satisfies: X != infLim
-     * =========================================================== */
+* Verify if the example value X satisfies: X != infLim
+* =========================================================== */
 public static int different(double attributeValue, double infLim) {
-
     if (attributeValue != infLim) {
         return 1;
+
     } else {
         return 0;
     }
 }
 
 /* ===========================================================
-     * Verify if the example value X satisfies: X = infLim
-     * =========================================================== */
+* Verify if the example value X satisfies: X = infLim
+* =========================================================== */
 public static int equal(double attributeValue, double infLim) {
-
     if (attributeValue == infLim) {
         return 1;
+
     } else {
         return 0;
     }
 }
 
 /* ===========================================================
-     * Verify if the example value X satisfies: infLim <= X <= supLim
-     * =========================================================== */
+* Verify if the example value X satisfies: infLim <= X <= supLim
+* =========================================================== */
 private static int compoundTerm(double infLim, double supLim, double attributeValue) {
-
     int left = greaterEqual(attributeValue, infLim);
     int right = lessEqual(attributeValue, supLim);
 
     if (left == 1 && right == 1) {
         return 1;
+
     } else {
         return 0;
     }
 }
 
 /* ===========================================================
-     * Verify if the example value X satisfies: X <= supLim
-     * =========================================================== */
+* Verify if the example value X satisfies: X <= supLim
+* =========================================================== */
 private static int lessEqual(double attributeValue, double supLim) {
-
     if (attributeValue <= supLim) {
         return 1;
+
     } else {
         return 0;
     }
 }
 
 /* ===========================================================
-     * Verify if the example value X satisfies: X >= infLim
-     * =========================================================== */
+* Verify if the example value X satisfies: X >= infLim
+* =========================================================== */
 public static int greaterEqual(double attributeValue, double infLim) {
-
     if (attributeValue >= infLim) {
         return 1;
+
     } else {
         return 0;
     }
 }
 
 /* ===========================================================
-     * Sorts the rules according to their fitness values
-     * =========================================================== */
+* Sorts the rules according to their fitness values
+* =========================================================== */
 public int compareTo(Object o) {
-
     if (Double.compare(this.getFitness(), ((Individual) o).getFitness()) > 0) {
         return -1;
+
     } else if (Double.compare(this.getFitness(), ((Individual) o).getFitness()) < 0) {
         return 1;
+
     } else {
         return 0;
     }
-
-    /* if (this.getFitness() > ((Individual) o).getFitness()) {
-         return -1;
-         } else if (this.getFitness() < ((Individual) o).getFitness()) {
-         return 1;
-         } else {
-         return 0;
-         }*/
 }
 
 public double getFitness() {
@@ -665,9 +650,6 @@ public double[] getRule() {
     return rule;
 }
 
-/*public ArrayList<String[]> getCoveredExamples() {
-     return coveredExamples;
-     }*/
 public ArrayList<Integer> getIndexCoveredExamples() {
     return indexCoveredExamples;
 }
@@ -695,4 +677,5 @@ public ArrayList<Integer> getPosActiveTerms() {
 public void setFitness(double fitness, int index) {
     this.fitness[index] = fitness;
 }
+
 }

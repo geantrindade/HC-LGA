@@ -14,14 +14,13 @@ import java.util.regex.Pattern;
 public class Parameters {
 
 //Parameters
-private String parameters[] = new String[22];
+private String parameters[] = new String[20];
 private static ArrayList<Double> thresholdValues = new ArrayList<Double>();
 private static int numberRuns;
 private static Double minFitnessTh;
 private static Double maxFitnessTh;
 private static int elitismNumber;
 private static Double mutationRate;
-//private static Double mutationGenProbability;
 private static Double probabilityUseClausule;
 private static Double crossoverRate;
 private static String datasetTrain;
@@ -36,18 +35,14 @@ private static int maxCoveredExamplesRule;
 private static int numLevels;
 private static int numberInitialRules;
 private static String hierarchyType;
-private static int multiLabel;
 private static String pathDatasets;
-private static int relationalTests;
 
 public Parameters(String configFile) {
-
     String regExp[] = {"number of runs =",
         "min fitness threshold =",
         "max fitness threshold =",
         "elitism number =",
         "mutation rate =",
-        //"mutation gen probability =",
         "crossover rate =",
         "dataset train =",
         "dataset valid =",
@@ -62,15 +57,12 @@ public Parameters(String configFile) {
         "probability using clausule =",
         "number initial rules =",
         "max covered examples per rule =",
-        "multi-label =",
         "path datasets =",
-        "relational tests =",
         "threshold values ="};
 
     Pattern comment = Pattern.compile("#");
 
     for (int i = 0; i < regExp.length; i++) {
-
         try {
             FileReader reader = new FileReader(configFile);
             BufferedReader buffReader = new BufferedReader(reader);
@@ -78,8 +70,7 @@ public Parameters(String configFile) {
             Pattern pattern = Pattern.compile(regExp[i]);
             String line = null;
 
-            if (i == 22) {//Get threshold values
-
+            if (i == 20) {//Get threshold values
                 while ((line = buffReader.readLine()) != null) {
                     Matcher m = pattern.matcher(line);
                     Matcher m1 = comment.matcher(line);
@@ -91,6 +82,7 @@ public Parameters(String configFile) {
                         for (int j = 0; j < vectorLine3.length; j++) {
                             thresholdValues.add(Double.parseDouble(vectorLine3[j]));
                         }
+                        
                         break;
                     }
                 }
@@ -99,12 +91,14 @@ public Parameters(String configFile) {
             while ((line = buffReader.readLine()) != null) {
                 Matcher m = pattern.matcher(line);
                 Matcher m1 = comment.matcher(line);
+                
                 if (m.find() && !m1.find()) {
                     String[] vectorLine = line.split(" = ");
                     parameters[i] = vectorLine[1];
                     break;
                 }
             }
+            
             buffReader.close();
             reader.close();
 
@@ -118,7 +112,6 @@ public Parameters(String configFile) {
     Parameters.maxFitnessTh = Double.parseDouble(parameters[2]);
     Parameters.elitismNumber = Integer.parseInt(parameters[3]);
     Parameters.mutationRate = Double.parseDouble(parameters[4]);
-    //Parameters.mutationGenProbability = Double.parseDouble(parameters[3]);
     Parameters.crossoverRate = Double.parseDouble(parameters[5]);
     Parameters.datasetTrain = parameters[6];
     Parameters.datasetValid = parameters[7];
@@ -133,10 +126,7 @@ public Parameters(String configFile) {
     Parameters.probabilityUseClausule = Double.parseDouble(parameters[16]);
     Parameters.numberInitialRules = Integer.parseInt(parameters[17]);
     Parameters.maxCoveredExamplesRule = Integer.parseInt(parameters[18]);
-    Parameters.multiLabel = Integer.parseInt(parameters[19]);
-    Parameters.pathDatasets = parameters[20];
-    Parameters.relationalTests = Integer.parseInt(parameters[21]);
-    //System.out.println();
+    Parameters.pathDatasets = parameters[19];
 }
 
 public static int getNumberInitialRules() {
@@ -183,9 +173,6 @@ public static int getMaxCoveredExamplesRule() {
     return maxCoveredExamplesRule;
 }
 
-/*public static Double getMutationGenProbability() {
-    return mutationGenProbability;
-    }*/
 public static Double getMutationRate() {
     return mutationRate;
 }
@@ -222,16 +209,8 @@ public static Double getProbabilityUseClausule() {
     return probabilityUseClausule;
 }
 
-public static int getMultiLabel() {
-    return multiLabel;
-}
-
 public static String getPathDatasets() {
     return pathDatasets;
-}
-
-public static int getRelationalTests() {
-    return relationalTests;
 }
 
 public static void setProbabilityUseClausule(Double probabilityUseClausule) {
