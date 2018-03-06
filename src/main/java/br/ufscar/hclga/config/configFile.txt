@@ -30,9 +30,6 @@ number of generations = 50
 #Number of attempts to obtain a better rule
 number of attempts = 5
 
-relational tests = 0
-#relational tests = 1
-
 #Size of tournament
 size tournament = 3
 
@@ -56,9 +53,6 @@ number initial rules = 620
 
 #Maximum covered examples per rule
 max covered examples per rule = 9000
-
-#Multi-label data?
-multi-label = 0
 
 #Paths datasets
 path datasets = C:\Users\gean_\Dropbox\posGrad\datasets\TEs\FOLDS\REPBASE\

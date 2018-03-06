@@ -10,8 +10,8 @@ public class HC_LGA {
 
 public static void main(String[] args) {
     //Get the parameters
-//    new Parameters("C:\\Users\\gean_\\Documents\\NetBeansProjects\\HC-LGA\\src\\main\\java\\br\\ufscar\\hclga\\configFile.txt");
-    new Parameters("configFile.txt");
+    new Parameters("C:\\Users\\gean_\\Documents\\NetBeansProjects\\HC-LGA\\src\\main\\java\\br\\ufscar\\hclga\\configFile.txt");
+//    new Parameters("configFile.txt");
 
     //Create directories for results
     new Paths();
@@ -121,8 +121,8 @@ public static void main(String[] args) {
         Paths.setNameFileTrainingTimes(bk);
         chron.resume();
 
-//        Results.saveRules(bestIndividualsObj1, "C:\\Users\\gean_\\Documents\\NetBeansProjects\\HC-LGA\\src\\main\\java\\br\\ufscar\\hclga\\obj1\\");
-        Results.saveRules(bestIndividualsObj1, "obj1/");
+        Results.saveRules(bestIndividualsObj1, "C:\\Users\\gean_\\Documents\\NetBeansProjects\\HC-LGA\\src\\main\\java\\br\\ufscar\\hclga\\obj1\\");
+//        Results.saveRules(bestIndividualsObj1, "obj1/");
 
 //        ClassificationWithRule cl = new ClassificationWithRule("mips", 1, 10,
 //                "C:\\Users\\gean_\\Desktop\\", "C:\\Users\\gean_\\Desktop\\", "C:\\Users\\gean_\\Documents"
@@ -207,8 +207,8 @@ public static void main(String[] args) {
         System.out.println("\nnumber of rules: " + bestIndividualsObj2.size());
         System.out.println("============= end obj2 ============");
 
-//        Results.saveRules(bestIndividualsObj2, "C:\\Users\\gean_\\Documents\\NetBeansProjects\\HC-LGA\\src\\main\\java\\br\\ufscar\\hclga\\obj2\\");
-        Results.saveRules(bestIndividualsObj2, "obj2/");
+        Results.saveRules(bestIndividualsObj2, "C:\\Users\\gean_\\Documents\\NetBeansProjects\\HC-LGA\\src\\main\\java\\br\\ufscar\\hclga\\obj2\\");
+//        Results.saveRules(bestIndividualsObj2, "obj2/");
 
         trainingTimes[0] = chron.time();
         trainingTimes[1] = chron.stime();

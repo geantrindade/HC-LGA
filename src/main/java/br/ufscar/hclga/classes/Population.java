@@ -228,7 +228,6 @@ public Population(boolean multiObj) {
                 pos += 4;
             }
 
-            //System.out.println();
             //Add generated individual to the population
             if (emptyRule > 0) {
                 population.add(individual);

@@ -44,7 +44,7 @@ public Evolution(Population population, boolean multiObj) {
     ArrayList<Individual> children;
 
     int numGenerations = 1;
-    int attempts = 1;
+    int newBestRuleAttempts = 1;
     int generationReboots = 0;
     int paretoReboots = 0;
 
@@ -53,7 +53,6 @@ public Evolution(Population population, boolean multiObj) {
         Parameters.setMinCoveredExamplesRule(Parameters.getMinCoveredExamplesRule() / 2);
     }
 
-    // attempts = number of attempts to find a better rule that the current better rule
     System.out.println("\n\n=============== obj" + obj + " ===================");
     System.out.println("remaining examples: " + Datasets.getDatasetTrain().size());
     System.out.println("initial rules: " + currentPopulation.size());
@@ -63,9 +62,9 @@ public Evolution(Population population, boolean multiObj) {
     int auxMaxCov = Parameters.getMaxCoveredExamplesRule();
     int auxTournament = Parameters.getSizeTournament();
 
-    while (numGenerations <= Parameters.getNumberGenerations() && attempts <= Parameters.getNumberAttempts()) {
-        System.out.println("\ngeneration " + numGenerations);
-        System.out.println("attempt " + attempts);
+    while (numGenerations <= Parameters.getNumberGenerations() && newBestRuleAttempts <= Parameters.getNumberAttempts()) {
+        System.out.println("\ngeneration: " + numGenerations);
+        System.out.println("attempt to find a new bestRule: " + newBestRuleAttempts);
         System.out.println("fitness best rule: " + bestIndividual.getFitness());
 
         // max value reached, so dont need to keeping searching
@@ -74,14 +73,13 @@ public Evolution(Population population, boolean multiObj) {
 
             for (Individual i : currentPopulation) { //check if other individuals got good values
                 if (i.getHFmeasure() >= Parameters.getMaxFitnessTh()) {
+                    
                     //for objective 1
                     if (multiObj == false) {
-
                         if (i.getFitness(0) >= bestIndividual.getFitness(0)) {
 
-                            if (i.getFitness(1) > bestIndividual.getFitness(1)) {
-                                System.out.println("similar or better value for obj1!");
-                                System.out.println("HIGHER value for obj2!");
+                            if (i.getFitness(obj) > bestIndividual.getFitness(obj)) {
+                                System.out.println("better value for objective "+obj+"found!");
 
                                 System.out.println("old bestRule obj1: " + bestIndividual.getFitness(0));
                                 System.out.println("old bestRule obj2: " + bestIndividual.getFitness(1));
@@ -132,8 +130,9 @@ public Evolution(Population population, boolean multiObj) {
                 }
             }
 
-            //dont have to iterate all the current population
-            numGenerations = Parameters.getNumberGenerations();
+            //dont have to iterate all the current population anymore and can skip next checks
+            numGenerations = Parameters.getNumberGenerations()+1;
+            newBestRuleAttempts = Parameters.getNumberAttempts()+1;
 
             //keep going with the search
         } else {
@@ -159,7 +158,7 @@ public Evolution(Population population, boolean multiObj) {
                 System.gc();
                 bestIndividual = currentPopulation.get(0);
 
-                attempts = 0; //reset attempts
+                newBestRuleAttempts = 0; //reset attempts
                 System.out.println("\nnew bestRule found!!!");
                 System.out.println("fitness: " + bestIndividual.getFitness());
             }
@@ -211,7 +210,7 @@ public Evolution(Population population, boolean multiObj) {
 
                 //reset 
                 numGenerations = 0;
-                attempts = 0;
+                newBestRuleAttempts = 0;
 
                 System.out.println("generation reboot " + generationReboots);
 
@@ -220,7 +219,7 @@ public Evolution(Population population, boolean multiObj) {
 
                 //skip next checks
                 numGenerations = Parameters.getNumberGenerations();
-                attempts = Parameters.getNumberAttempts() + 1;
+                newBestRuleAttempts = Parameters.getNumberAttempts() + 1;
 
             } else {
                 generationReboots = 0;
@@ -229,7 +228,7 @@ public Evolution(Population population, boolean multiObj) {
         }
 
         //last attempt
-        if (attempts == Parameters.getNumberAttempts()) {
+        if (newBestRuleAttempts == Parameters.getNumberAttempts()) {
             if (bestIndividual.getHFmeasure() < Parameters.getMinFitnessTh()) {
                 System.out.println("\nmin fitness threshold not achieved!!!");
 
@@ -257,7 +256,7 @@ public Evolution(Population population, boolean multiObj) {
                 }
 
                 //reset
-                attempts = 0;
+                newBestRuleAttempts = 0;
 
             } else {
                 System.out.println("\nmin fitness threshold achieved!!!");
@@ -265,7 +264,7 @@ public Evolution(Population population, boolean multiObj) {
         }
 
         if ((numGenerations == Parameters.getNumberGenerations()
-                || attempts == Parameters.getNumberAttempts())
+                || newBestRuleAttempts == Parameters.getNumberAttempts())
                 && multiObj == true) {
             //check if all the solutions in obj2 are in the pareto front
             boolean pareto = true;
@@ -313,7 +312,7 @@ public Evolution(Population population, boolean multiObj) {
                         }
 
                         numGenerations = 0;
-                        attempts = 0;
+                        newBestRuleAttempts = 0;
 
                         break;
 
@@ -332,7 +331,7 @@ public Evolution(Population population, boolean multiObj) {
         }
 
         numGenerations++;
-        attempts++;
+        newBestRuleAttempts++;
     }//end while
 
     //reestablish the original values

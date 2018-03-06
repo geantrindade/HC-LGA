@@ -24,7 +24,6 @@ private static Double mutationRate;
 private static Double probabilityUseClausule;
 private static Double crossoverRate;
 private static String datasetTrain;
-private static String datasetValid;
 private static String datasetTest;
 private static int numberGenerations;
 private static int numberAttempts;
@@ -45,7 +44,6 @@ public Parameters(String configFile) {
         "mutation rate =",
         "crossover rate =",
         "dataset train =",
-        "dataset valid =",
         "dataset test =",
         "number of generations =",
         "number of attempts =",
@@ -70,7 +68,7 @@ public Parameters(String configFile) {
             Pattern pattern = Pattern.compile(regExp[i]);
             String line = null;
 
-            if (i == 20) {//Get threshold values
+            if (i == 19) {//Get threshold values
                 while ((line = buffReader.readLine()) != null) {
                     Matcher m = pattern.matcher(line);
                     Matcher m1 = comment.matcher(line);
@@ -114,19 +112,18 @@ public Parameters(String configFile) {
     Parameters.mutationRate = Double.parseDouble(parameters[4]);
     Parameters.crossoverRate = Double.parseDouble(parameters[5]);
     Parameters.datasetTrain = parameters[6];
-    Parameters.datasetValid = parameters[7];
-    Parameters.datasetTest = parameters[8];
-    Parameters.numberGenerations = Integer.parseInt(parameters[9]);
-    Parameters.numberAttempts = Integer.parseInt(parameters[10]);
-    Parameters.sizeTournament = Integer.parseInt(parameters[11]);
-    Parameters.maxUncoveredExamples = Integer.parseInt(parameters[12]);
-    Parameters.minCoveredExamplesRule = Integer.parseInt(parameters[13]);
-    Parameters.numLevels = Integer.parseInt(parameters[14]);
-    Parameters.hierarchyType = parameters[15];
-    Parameters.probabilityUseClausule = Double.parseDouble(parameters[16]);
-    Parameters.numberInitialRules = Integer.parseInt(parameters[17]);
-    Parameters.maxCoveredExamplesRule = Integer.parseInt(parameters[18]);
-    Parameters.pathDatasets = parameters[19];
+    Parameters.datasetTest = parameters[7];
+    Parameters.numberGenerations = Integer.parseInt(parameters[8]);
+    Parameters.numberAttempts = Integer.parseInt(parameters[9]);
+    Parameters.sizeTournament = Integer.parseInt(parameters[10]);
+    Parameters.maxUncoveredExamples = Integer.parseInt(parameters[11]);
+    Parameters.minCoveredExamplesRule = Integer.parseInt(parameters[12]);
+    Parameters.numLevels = Integer.parseInt(parameters[13]);
+    Parameters.hierarchyType = parameters[14];
+    Parameters.probabilityUseClausule = Double.parseDouble(parameters[15]);
+    Parameters.numberInitialRules = Integer.parseInt(parameters[16]);
+    Parameters.maxCoveredExamplesRule = Integer.parseInt(parameters[17]);
+    Parameters.pathDatasets = parameters[18];
 }
 
 public static int getNumberInitialRules() {
@@ -147,10 +144,6 @@ public static String getFileDatasetTest() {
 
 public static String getFileDatasetTrain() {
     return getDatasetTrain();
-}
-
-public static String getFileDatasetValid() {
-    return datasetValid;
 }
 
 public static int getElitismNumber() {
